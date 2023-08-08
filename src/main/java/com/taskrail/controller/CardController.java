@@ -1,14 +1,12 @@
-package com.taskrail.taskrail.controller;
+package com.taskrail.controller;
 
-import com.taskrail.taskrail.dto.ApiResponseDto;
-import com.taskrail.taskrail.dto.CardRequestDto;
-import com.taskrail.taskrail.dto.CardResponseDto;
-import com.taskrail.taskrail.security.UserDetailsImpl;
-import com.taskrail.taskrail.service.CardService;
+import com.taskrail.dto.ApiResponseDto;
+import com.taskrail.dto.CardRequestDto;
+import com.taskrail.dto.CardResponseDto;
+import com.taskrail.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

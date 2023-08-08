@@ -1,4 +1,4 @@
-package com.taskrail.taskrail.entity;
+package com.taskrail.entity;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Column;

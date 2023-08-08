@@ -1,6 +1,6 @@
-package com.taskrail.taskrail.dto;
+package com.taskrail.dto;
 
-import com.taskrail.taskrail.entity.Card;
+import com.taskrail.entity.Card;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

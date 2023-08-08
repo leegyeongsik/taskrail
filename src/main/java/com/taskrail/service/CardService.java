@@ -1,9 +1,9 @@
-package com.taskrail.taskrail.service;
+package com.taskrail.service;
 
-import com.taskrail.taskrail.dto.CardRequestDto;
-import com.taskrail.taskrail.dto.CardResponseDto;
-import com.taskrail.taskrail.entity.Card;
-import com.taskrail.taskrail.repository.CardRepository;
+import com.taskrail.dto.CardRequestDto;
+import com.taskrail.dto.CardResponseDto;
+import com.taskrail.entity.Card;
+import com.taskrail.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

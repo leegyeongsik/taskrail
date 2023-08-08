@@ -1,6 +1,6 @@
-package com.taskrail.taskrail.entity;
+package com.taskrail.entity;
 
-import com.taskrail.taskrail.dto.CardRequestDto;
+import com.taskrail.dto.CardRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

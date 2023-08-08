@@ -1,4 +1,4 @@
-package com.taskrail.taskrail.dto;
+package com.taskrail.dto;
 
 import lombok.Getter;
 
