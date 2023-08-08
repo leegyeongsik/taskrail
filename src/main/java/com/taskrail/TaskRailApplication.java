@@ -1,4 +1,4 @@
-package com.taskrail.taskrail;
+package com.taskrail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
