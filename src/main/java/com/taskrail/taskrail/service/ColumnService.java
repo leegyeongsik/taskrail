@@ -2,6 +2,7 @@ package com.taskrail.taskrail.service;
 
 import com.taskrail.taskrail.dto.ColumnRequestDto;
 import com.taskrail.taskrail.dto.ColumnResponseDto;
+import com.taskrail.taskrail.entity.Board;
 import com.taskrail.taskrail.entity.Column;
 import com.taskrail.taskrail.entity.User;
 import com.taskrail.taskrail.repository.ColumnRepository;
@@ -14,8 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ColumnService {
     private final ColumnRepository columnRepository;
 
+
     public ColumnResponseDto createColumn(User user, ColumnRequestDto columnRequestDto) {
-        Column column = new Column(columnRequestDto.getTitle());
+        Column column = new Column(columnRequestDto.getName());
         columnRepository.save(column);
         return new ColumnResponseDto(column);
     }
@@ -24,7 +26,7 @@ public class ColumnService {
     @Transactional
     public ColumnResponseDto updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
         Column column = findColumn(id);
-        column.setTitle(columnRequestDto.getTitle());
+        column.setName(columnRequestDto.getName());
         return new ColumnResponseDto(column);
     }
 

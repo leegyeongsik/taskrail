@@ -21,14 +21,15 @@ public class Column {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @jakarta.persistence.Column(length = 255)
-    private String title;
+    private String name;
+
+    private int orderIndex;
     /**
      * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
      */
 
-    public Column(String title) {
-        this.title = title;
+    public Column(String name) {
+        this.name = name;
     }
 
     /**
@@ -38,10 +39,6 @@ public class Column {
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
 
     @OneToMany(mappedBy = "column")
     private List<Card> cards = new ArrayList<>();
@@ -53,12 +50,16 @@ public class Column {
      * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.
      */
 
+    public void setBoard(Board board) {
+        this.board = board;
+        board.addColumn(this);
+    }
 
     /**
      * 서비스 메소드 - 외부에서 엔티티를 수정할 메소드를 정의합니다. (단일 책임을 가지도록 주의합니다.)
      */
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ColumnRequestDto {
     private Long boardId;
-    private String title;
+    private String name;
 }
