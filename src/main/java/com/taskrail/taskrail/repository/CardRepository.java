@@ -8,5 +8,5 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
-
+    List<Card> findAllByColumn_IdOrderByOrdersDesc(Long columnId);
 }

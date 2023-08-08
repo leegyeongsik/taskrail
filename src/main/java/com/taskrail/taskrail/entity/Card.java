@@ -1,13 +1,11 @@
 package com.taskrail.taskrail.entity;
 
+import com.taskrail.taskrail.dto.CardRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "card")
@@ -19,19 +17,40 @@ public class Card extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @jakarta.persistence.Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @jakarta.persistence.Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @jakarta.persistence.Column(nullable = false)
     private String color;
 
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orders;
 
     private LocalDateTime due_date;
+
+    @ManyToOne
+    @JoinColumn(name ="column_id")
+    private Column column;
+
+    public Card(CardRequestDto requestDto, Column column, Long orders){
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.color = requestDto.getColor();
+        this.due_date = requestDto.getDue_date();
+        this.column = column;
+        this.orders = orders;
+
+    }
+
+    public void update(CardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.color = requestDto.getColor();
+        this.due_date = requestDto.getDue_date();
+    }
 
 //    //댓글 리스트
 //    @OneToMany(mappedBy = "card")
