@@ -17,13 +17,13 @@ public class Card extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String content;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String color;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,15 +33,24 @@ public class Card extends TimeStamped {
 
     @ManyToOne
     @JoinColumn(name ="column_id")
-    private Column column;
+    private Columnss column;
 
-    public Card(CardRequestDto requestDto, Column column, Long orders){
+    @ManyToOne
+    @JoinColumn(name ="user_id")
+    private User user;
+
+//    //댓글 리스트
+//    @OneToMany(mappedBy = "card")
+//    Set<CommentResponseDto> commentList = new LinkedHashSet<>();
+
+    public Card(CardRequestDto requestDto, Columnss column, Long orders, User user){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.color = requestDto.getColor();
         this.due_date = requestDto.getDue_date();
         this.column = column;
         this.orders = orders;
+        this.user = user;
 
     }
 
@@ -52,7 +61,11 @@ public class Card extends TimeStamped {
         this.due_date = requestDto.getDue_date();
     }
 
-//    //댓글 리스트
-//    @OneToMany(mappedBy = "card")
-//    Set<Comment> commentList = new LinkedHashSet<>();
+
+    public void updateNext(Columnss column) {
+        this.column = column;
+    }
+    public void updatePrev(Columnss column) {
+        this.column = column;
+    }
 }
