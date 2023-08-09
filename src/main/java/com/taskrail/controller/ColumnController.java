@@ -19,13 +19,6 @@ import java.util.List;
 public class ColumnController {
     private final ColumnService columnService;
 
-    // 전체 컬럼 조회
-    @GetMapping("/columns")
-    public ResponseEntity<List<ColumnResponseDto>> getAllColumns() {
-        List<ColumnResponseDto> columns = columnService.getAllColumns();
-        return ResponseEntity.ok(columns);
-    }
-
     // 컬럼 생성
     @PostMapping("/columns")
     public ColumnResponseDto createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
