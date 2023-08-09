@@ -46,29 +46,19 @@ public class UserServiceImpl implements UserService{
 
 
     @Transactional
-    public void updateUser(Long id, UserRequestDto requestDto, User user) {
-        if(!userRepository.existsByIdAndName(id, user.getName())){
-            log.error("본인이 아닌 사용자가 수정을 요청하였습니다.");
-            throw new IllegalArgumentException("본인만 수정이 가능합니다.");
-        }
+    public void updateUser(UserRequestDto requestDto, User user) {
         String password = passwordEncoder.encode(requestDto.getPassword());
         String email = requestDto.getEmail();
 
-        User updateUser = userRepository.findUserById(id);
+        User updateUser = userRepository.findUserById(user.getId());
         updateUser.update(email,password);
 
         log.info("정보 수정에 성공하였습니다.");
     }
 
 
-    public void deleteUser(Long id, User user) {
-        if(!userRepository.existsByIdAndName(id, user.getName())){
-            log.error("본인이 아닌 사용자가 삭제를 요청하였습니다.");
-            throw new IllegalArgumentException("본인만 탈퇴가 가능합니다.");
-        }
-
-        userRepository.delete(userRepository.findUserById(id));
-
+    public void deleteUser(User user) {
+        userRepository.delete(userRepository.findUserById(user.getId()));
         log.info("정보 삭제에 성공하였습니다.");
     }
 

@@ -9,6 +9,6 @@ public class UserRequestDto {
     // 회원 정보 수정 시에
 
     private String password;
-    private String Email;
+    private String email;
 
 }

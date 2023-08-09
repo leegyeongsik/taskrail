@@ -65,7 +65,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/main").permitAll() // 메인 페이지 요청 허가
+                        .requestMatchers("/**").permitAll() // 메인 페이지 요청 허가
                         .requestMatchers("/cover").permitAll() // 커버 페이지 요청 허가
                         .requestMatchers("/login").permitAll() // 회원가입 페이지 요청 허가
                         .requestMatchers("/signup").permitAll() // 로그인 페이지 요청 허가
