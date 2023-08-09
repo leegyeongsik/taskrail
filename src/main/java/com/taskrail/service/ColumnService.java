@@ -1,6 +1,7 @@
 package com.taskrail.service;
 
 import com.taskrail.dto.ColumnRequestDto;
+import com.taskrail.dto.ColumnResponseDto;
 import com.taskrail.dto.UserResponseDto;
 import com.taskrail.entity.Board;
 import com.taskrail.entity.Columns;
@@ -24,7 +25,7 @@ public class ColumnService {
 
     // 컬럼 생성
     //@Transactional
-    public Columns createColumn(User user, ColumnRequestDto columnRequestDto) {
+    public ColumnResponseDto createColumn(User user, ColumnRequestDto columnRequestDto) {
 
         Board board = findBoard(columnRequestDto.getBoardId());
 
@@ -41,7 +42,7 @@ public class ColumnService {
 
         Columns savedColumn = columnRepository.save(column);
 
-        return savedColumn;
+        return new ColumnResponseDto(savedColumn);
     }
 
 

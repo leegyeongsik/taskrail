@@ -12,13 +12,15 @@ import java.util.List;
 @Getter
 @Setter
 public class ColumnResponseDto {
+    private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "column")
-    private List<Card> cards = new ArrayList<>();
+//    @OneToMany(mappedBy = "column")
+//    private List<Card> cards = new ArrayList<>();
 
 
     public ColumnResponseDto(Columns column) {
+        this.id = column.getId();
         this.name = column.getName();
     }
 }
