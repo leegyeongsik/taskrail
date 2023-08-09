@@ -16,7 +16,6 @@ public class ColumnResponseDto {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "column")
     private List<CardResponseDto> cards = new ArrayList<>();
 
     private List<CardResponseDto> cardResponseDtos = new ArrayList<>();
