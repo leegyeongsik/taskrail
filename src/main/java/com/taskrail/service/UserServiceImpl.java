@@ -47,11 +47,16 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     public void updateUser(UserRequestDto requestDto, User user) {
-        String password = passwordEncoder.encode(requestDto.getPassword());
+        User updateUser = userRepository.findUserById(user.getId());
+
+        if(!passwordEncoder.matches(requestDto.getPassword(),updateUser.getPassword())) {
+            throw new IllegalArgumentException("기존 비밀번호가 틀립니다.");
+        }
+
+        String newPassword = passwordEncoder.encode(requestDto.getNewPassword());
         String email = requestDto.getEmail();
 
-        User updateUser = userRepository.findUserById(user.getId());
-        updateUser.update(email,password);
+        updateUser.update(email,newPassword);
 
         log.info("정보 수정에 성공하였습니다.");
     }

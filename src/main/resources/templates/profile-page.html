@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <link rel="shortcut icon" href="#">
@@ -20,7 +21,6 @@
 </head>
 
 <body>
-
 <div class="container left-panel-active">
 
   <!-- 사용자 정보 수정 -->
@@ -28,8 +28,9 @@
     <div class="form" id="form2">
       <h2 class="form__title">사용자 정보 수정</h2>
       <input type="text" placeholder="아이디" name="username" id="username" class="input" readonly/>
-      <input type="password" placeholder="비밀번호" name="password" id="password" class="input"/>
-      <input type="email" placeholder="이메일" name="email" id="email" class="input"/>
+      <input type="password" placeholder="기존 비밀번호 입력" name="old-password" id="old-password" class="input"/>
+      <input type="password" placeholder="새 비밀번호 입력" name="new-password" id="new-password" class="input"/>
+      <input type="email" placeholder="이메일 입력" name="email" id="email" class="input"/>
       <button class="btn" onclick="updateUser()">수정하기</button>
     </div>
   </div>
@@ -44,7 +45,6 @@
   </div>
 
 </div>
-
 </body>
 <script type="application/javascript" src="/js/profile.js"></script>
 </html>
