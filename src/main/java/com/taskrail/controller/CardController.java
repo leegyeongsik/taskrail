@@ -1,9 +1,6 @@
 package com.taskrail.controller;
 
-import com.taskrail.dto.ApiResponseDto;
-import com.taskrail.dto.CardRequestDto;
-import com.taskrail.dto.CardResponseDto;
-import com.taskrail.dto.RestApiResponseDto;
+import com.taskrail.dto.*;
 import com.taskrail.security.UserDetailsImpl;
 import com.taskrail.service.CardService;
 import lombok.RequiredArgsConstructor;
@@ -58,19 +55,39 @@ public class CardController {
     @PutMapping("/cards/{cardId}/prev")
     public ResponseEntity<ApiResponseDto> updatePrevCard(@PathVariable Long cardId){
         cardService.updatePrevCard(cardId);
-        return ResponseEntity.ok().body(new ApiResponseDto("카드 이동 완료", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new ApiResponseDto("카드 앞 이동 완료", HttpStatus.OK.value()));
     }
     //6. 카드 뒤 컬럼으로 이동
     @PutMapping("/cards/{cardId}/next")
     public ResponseEntity<ApiResponseDto> updateNextCard(@PathVariable Long cardId){
         cardService.updateNextCard(cardId);
-        return ResponseEntity.ok().body(new ApiResponseDto("카드 이동 완료", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new ApiResponseDto("카드 뒤 이동 완료", HttpStatus.OK.value()));
     }
 
-    //7. 사용자 할당인원 추가
+    //7. 카드 위 순서로 이동
+    @PutMapping("/cards/{cardId}/up")
+    public ResponseEntity<ApiResponseDto> updateUpCard(@PathVariable Long cardId){
+        cardService.updateUpCard(cardId);
+        return ResponseEntity.ok().body(new ApiResponseDto("카드 위 이동 완료", HttpStatus.OK.value()));
+    }
 
+    //8. 카드 아래 순서로 이동
+    @PutMapping("/cards/{cardId}/down")
+    public ResponseEntity<ApiResponseDto> updateDownCard(@PathVariable Long cardId){
+        cardService.updateDownCard(cardId);
+        return ResponseEntity.ok().body(new ApiResponseDto("카드 아래 이동 완료", HttpStatus.OK.value()));
+    }
 
-    //8. 예외 처리
+    //9. 사용자 할당인원 추가
+    @PostMapping("cards/{cardId}") // 유저 초대
+    public ResponseEntity<ApiResponseDto> cardAssignUser(@PathVariable Long cardId ,
+                             @RequestBody CardAssignUserRequestDto requestDto,
+                             @AuthenticationPrincipal UserDetailsImpl userDetails){
+        cardService.cardAssignUser(cardId,requestDto,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponseDto("인원 추가 완료", HttpStatus.OK.value()));
+    }
+
+    //10. 예외 처리
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<RestApiResponseDto> handleMethodArgumentNotValidException(IllegalArgumentException ex) {
         RestApiResponseDto restApiException = new RestApiResponseDto(HttpStatus.BAD_REQUEST.value(),ex.getMessage());
@@ -82,7 +99,7 @@ public class CardController {
         );
     }
 
-    //9. 예외 처리
+    //11. 예외 처리
     @ExceptionHandler({NullPointerException.class})
     public ResponseEntity<RestApiResponseDto> handleMethodArgumentNotValidException(NullPointerException ex) {
         RestApiResponseDto restApiException = new RestApiResponseDto(HttpStatus.BAD_REQUEST.value(),ex.getMessage());

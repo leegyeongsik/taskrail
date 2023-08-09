@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "card")
 @Getter
 @NoArgsConstructor
-public class Card extends TimeStamped {
+public class Card extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class Card extends TimeStamped {
 
     @ManyToOne
     @JoinColumn(name ="column_id")
-    private Columnss column;
+    private Columns column;
 
     @ManyToOne
     @JoinColumn(name ="user_id")
@@ -43,7 +43,7 @@ public class Card extends TimeStamped {
 //    @OneToMany(mappedBy = "card")
 //    Set<CommentResponseDto> commentList = new LinkedHashSet<>();
 
-    public Card(CardRequestDto requestDto, Columnss column, Long orders, User user){
+    public Card(CardRequestDto requestDto, Columns column, Long orders, User user){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.color = requestDto.getColor();
@@ -62,10 +62,16 @@ public class Card extends TimeStamped {
     }
 
 
-    public void updateNext(Columnss column) {
+    public void updateNext(Columns column) {
         this.column = column;
     }
-    public void updatePrev(Columnss column) {
+    public void updatePrev(Columns column) {
         this.column = column;
+    }
+    public void updateUp(Long orders) {
+        this.orders = orders-1;
+    }
+    public void updateDown(Long orders) {
+        this.orders = orders+1;
     }
 }
