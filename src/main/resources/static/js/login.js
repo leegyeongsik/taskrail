@@ -126,6 +126,8 @@ function signup() {
             })
         })
         .fail(function (jqXHR, textStatus, error) {
+            console.log(jqXHR);
+            console.log(textStatus);
             console.log(error);
             Toast.fire({
                 icon: 'error',
