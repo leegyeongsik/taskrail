@@ -30,12 +30,17 @@ $(document).ready(function () {
       setToken(token);
     } else { // 만료되었을 때
       console.log('Token has expired.');
-      window.location.href = "/main";
+      removeToken();
     }
   } else { // 헤더에 토큰이 없을 경우
-    window.location.href = "/main";
+    Swal.fire({
+      icon: 'warning',
+      title: '로그인 요망',
+      text: '로그인 후에 요청 부탁드립니다.',
+    }).then(function () {
+      window.location.href = "/login";
+    })
   }
-
 });
 
 function setToken(token) {
