@@ -20,6 +20,7 @@ public class CardResponseDto {
     private Long orders;
     private LocalDateTime due_Date;
     private List<CommentResponseDto> commentList;
+    private List<CardRoleResponseDto> cardRoleResponseDtoList;
 
 
     public CardResponseDto(Card card) {
@@ -30,7 +31,6 @@ public class CardResponseDto {
         this.orders = card.getOrders();
         this.due_Date = card.getDue_date();
         this.commentList = card.getCommentList().stream().map(CommentResponseDto::new).collect(Collectors.toList());
+        this.cardRoleResponseDtoList = card.getCardRoleList().stream().map(CardRoleResponseDto::new).collect(Collectors.toList());
     }
-
-
 }
