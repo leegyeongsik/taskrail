@@ -8,7 +8,6 @@ import com.taskrail.entity.User;
 import com.taskrail.repository.BoardRepository;
 import com.taskrail.repository.ColumnRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +26,7 @@ public class ColumnService {
     //@Transactional
     public Columns createColumn(User user, ColumnRequestDto columnRequestDto) {
 
-        Board board = boardRepository.findById(columnRequestDto.getBoardId()).orElseThrow(
-                () -> new IllegalArgumentException("보드가 존재하지 않습니다.")
-        );
+        Board board = findBoard(columnRequestDto.getBoardId());
 
         //  보드에 초대된 유저인지 확인
         if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
@@ -51,9 +48,7 @@ public class ColumnService {
     // 컬럼 이름 변경
     @Transactional
     public void updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
-        Board board = boardRepository.findById(columnRequestDto.getBoardId()).orElseThrow(
-                () -> new IllegalArgumentException("보드가 존재하지 않습니다.")
-        );
+        Board board = findBoard(columnRequestDto.getBoardId());
 
         if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
