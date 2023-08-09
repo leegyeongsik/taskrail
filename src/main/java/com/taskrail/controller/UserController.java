@@ -40,8 +40,9 @@ public class UserController {
     // 사용자 정보 삭제 API
     @DeleteMapping("/users")
     public void deleteUser(
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.deleteUser(userDetails.getUser());
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody UserRequestDto requestDto) {
+        userService.deleteUser(requestDto,userDetails.getUser());
     }
 
 

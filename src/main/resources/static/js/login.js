@@ -1,3 +1,28 @@
+// 비밀번호 내용 표시 및 숨기기
+const passwordInput = document.getElementById('password');
+const loginPasswordInput = document.getElementById('loginPassword');
+const showSignupPwBtn = document.getElementById('showSignupPwBtn');
+const showLoginPwBtn = document.getElementById('showLoginPwBtn');
+
+showSignupPwBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+    } else {
+        passwordInput.type = 'password';
+    }
+});
+
+showLoginPwBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (loginPasswordInput.type === 'password') {
+        loginPasswordInput.type = 'text';
+    } else {
+        loginPasswordInput.type = 'password';
+    }
+});
+
+
 const logInBtn = document.getElementById("logIn");
 const signUpBtn = document.getElementById("signUp");
 const fistForm = document.getElementById("form1");
@@ -15,6 +40,7 @@ signUpBtn.addEventListener("click", () => {
 fistForm.addEventListener("submit", (e) => e.preventDefault());
 secondForm.addEventListener("submit", (e) => e.preventDefault());
 
+
 const Toast = Swal.mixin({
     toast: true,
     position: 'center-center',
@@ -26,6 +52,10 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
+
+
+// 쿠키값 가져오기
+let token = Cookies.get('Authorization');
 
 function signup() {
     let name = $('#username').val();
@@ -164,7 +194,9 @@ function onLogin() {
         .fail(function (jqXHR, textStatus) {
             Toast.fire({
                 icon: 'warning',
-                title: '가입한 내역 여부 혹은 로그인 정보를 확인부탁드립니다.'
+                title: '가입한 내역 여부 혹은 \n 로그인 정보를 확인부탁드립니다.'
+            }).then(function () {
+                window.location.reload();
             })
         });
 }

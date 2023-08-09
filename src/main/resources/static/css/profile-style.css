@@ -67,10 +67,23 @@ body {
 }
 
 .container--update {
+    left: 0;
     width: 50%;
+    z-index: 2;
 }
 
 .container.right-panel-active .container--update {
+    transform: translateX(100%);
+}
+
+.container--remove {
+    left: 0;
+    opacity: 0;
+    width: 50%;
+    z-index: 1;
+}
+
+.container.right-panel-active .container--remove {
     animation: show 0.6s;
     opacity: 1;
     transform: translateX(100%);

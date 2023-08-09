@@ -26,10 +26,11 @@ public interface UserService {
 
   /**
    * 사용자 정보 탈퇴 메서드
+   * @param requestDto 수정할 칼럼들에 대한 데이터
    * @param user 탈퇴 요청한 로그인한 사욪자
    * //@return HTTPStatusCode 상태 코드
    */
-  void deleteUser(User user);
+  void deleteUser(UserRequestDto requestDto, User user);
 
 
 

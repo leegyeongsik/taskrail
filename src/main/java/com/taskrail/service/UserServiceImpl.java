@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
         User updateUser = userRepository.findUserById(user.getId());
 
         if(!passwordEncoder.matches(requestDto.getPassword(),updateUser.getPassword())) {
-            throw new IllegalArgumentException("기존 비밀번호가 틀립니다.");
+            throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
 
         String newPassword = passwordEncoder.encode(requestDto.getNewPassword());
@@ -58,13 +58,19 @@ public class UserServiceImpl implements UserService{
 
         updateUser.update(email,newPassword);
 
-        log.info("정보 수정에 성공하였습니다.");
+        log.info("회원 정보 수정을 성공하였습니다.");
     }
 
 
-    public void deleteUser(User user) {
+    public void deleteUser(UserRequestDto requestDto, User user) {
+        User deleteUser = userRepository.findUserById(user.getId());
+
+        if(!passwordEncoder.matches(requestDto.getPassword(),deleteUser.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+        }
+
         userRepository.delete(userRepository.findUserById(user.getId()));
-        log.info("정보 삭제에 성공하였습니다.");
+        log.info("회원 정보 삭제를 성공하였습니다.");
     }
 
 
