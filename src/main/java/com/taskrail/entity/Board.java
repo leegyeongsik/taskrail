@@ -3,17 +3,20 @@ package com.taskrail.entity;
 import com.taskrail.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "board")
-
+@EqualsAndHashCode
 public class Board extends Timestamped{
 
     /**
@@ -49,19 +52,22 @@ public class Board extends Timestamped{
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private Set<BoardRole> boardAuthSet  = new LinkedHashSet<>();
 
-//    @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
-//    private Set<Column> Columns = new LinkedHashSet<>();
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Columns> columns = new ArrayList<>();
 
 
     /**
      * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.
      */
 
+    public void addColumn(Columns column) {
+        this.columns.add(column);
+    }
 
     /**
      * 서비스 메소드 - 외부에서 엔티티를 수정할 메소드를 정의합니다. (단일 책임을 가지도록 주의합니다.)
@@ -74,5 +80,6 @@ public class Board extends Timestamped{
 
 
     }
+
 
 }

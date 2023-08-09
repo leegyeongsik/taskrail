@@ -1,10 +1,7 @@
 package com.taskrail.controller;
 
 import com.taskrail.dto.ColumnRequestDto;
-import com.taskrail.dto.ColumnRequestDto;
-import com.taskrail.dto.ColumnResponseDto;
 import com.taskrail.entity.Columns;
-import com.taskrail.security.UserDetailsImpl;
 import com.taskrail.security.UserDetailsImpl;
 import com.taskrail.service.ColumnService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +18,8 @@ public class ColumnController {
 
     // 컬럼 생성
     @PostMapping("/columns")
-    public ResponseEntity<Columns> createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
-        Columns newColumn = columnService.createColumn(userDetails.getUser(), columnRequestDto);
-        return ResponseEntity.ok(newColumn);
+    public Columns createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
+        return columnService.createColumn(userDetails.getUser(), columnRequestDto);
     }
 
     // 컬럼 이름 수정
@@ -42,15 +38,15 @@ public class ColumnController {
 
     // 컬럼 오른쪽으로 이동
     @PutMapping("/columns/{id}/right")
-    public ResponseEntity<String> moveColumnRight(@PathVariable Long id) {
-        columnService.moveColumn(id, 1);
+    public ResponseEntity<String> moveColumnRight(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        columnService.moveColumn(userDetails.getUser(), id, 1);
         return ResponseEntity.ok("컬럼을 오른쪽으로 이동했습니다.");
     }
 
     // 컬럼 왼쪽으로 이동
     @PutMapping("/columns/{id}/left")
-    public ResponseEntity<String> moveColumnLeft(@PathVariable Long id) {
-        columnService.moveColumn(id, -1);
+    public ResponseEntity<String> moveColumnLeft(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        columnService.moveColumn(userDetails.getUser(), id, -1);
         return ResponseEntity.ok("컬럼을 왼쪽으로 이동했습니다.");
     }
 

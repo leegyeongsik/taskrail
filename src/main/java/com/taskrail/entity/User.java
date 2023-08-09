@@ -3,6 +3,7 @@ package com.taskrail.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 // @Setter -> Entity 클래스에는 DB 정보 보호를 위해 미기재
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class User {
 
     @Id

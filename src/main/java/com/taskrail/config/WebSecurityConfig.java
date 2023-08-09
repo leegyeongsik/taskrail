@@ -84,16 +84,5 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*"); // Allow all origins. You can restrict it to specific origins.
-        config.addAllowedMethod("*"); // Allow all HTTP methods.
-        config.addAllowedHeader("*"); // Allow all headers.
-        config.addAllowedOriginPattern("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
 
 }

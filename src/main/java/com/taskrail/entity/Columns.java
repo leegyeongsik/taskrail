@@ -33,15 +33,16 @@ public class Columns {
     /**
      * 연관관계 - Foreign Key 값을 따로 컬럼으로 정의하지 않고 연관 관계로 정의합니다.
      */
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BoardId")
     private Board board;
 
-    @OneToMany(mappedBy = "columns")
-    private List<Card> cards = new ArrayList<>();
-
-
+//    @OneToMany(mappedBy = "columns",  cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Card> cards = new ArrayList<>();
 
 
     /**
