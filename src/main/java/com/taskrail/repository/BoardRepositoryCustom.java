@@ -2,6 +2,8 @@ package com.taskrail.repository;
 
 
 import com.taskrail.entity.Board;
+import com.taskrail.entity.Card;
+import com.taskrail.entity.Columns;
 import com.taskrail.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,7 @@ public interface BoardRepositoryCustom {
 
     List<User> getBoardUser(Long boardId);
     List<User> search(String name);
+    List<Columns> getDetailBoard(Long boardId);
+    List<Card> getColumnCard(Long columnId);
+
 }
