@@ -1,10 +1,8 @@
 package com.taskrail.service;
 
-import com.taskrail.dto.RestApiResponseDto;
 import com.taskrail.dto.SignupRequestDto;
 import com.taskrail.dto.UserRequestDto;
 import com.taskrail.entity.User;
-import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
