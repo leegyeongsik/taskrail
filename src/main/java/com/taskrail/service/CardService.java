@@ -3,6 +3,7 @@ package com.taskrail.service;
 import com.taskrail.dto.CardAssignUserRequestDto;
 import com.taskrail.dto.CardRequestDto;
 import com.taskrail.dto.CardResponseDto;
+import com.taskrail.dto.CommentResponseDto;
 import com.taskrail.entity.*;
 import com.taskrail.repository.CardRepository;
 import com.taskrail.repository.CardRoleRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +27,7 @@ public class CardService {
     private final CardRoleRepository cardRoleRepository;
     public List<CardResponseDto> getCards(Long columnId) {
         return cardRepository.findAllByColumn_IdOrderByOrdersDesc(columnId).stream().map(CardResponseDto::new).toList();
+
     }
 
     public void createCard(Long columnId, CardRequestDto requestDto, User user) {
