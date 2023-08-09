@@ -1,10 +1,10 @@
-const signInBtn = document.getElementById("signIn");
+const logInBtn = document.getElementById("logIn");
 const signUpBtn = document.getElementById("signUp");
 const fistForm = document.getElementById("form1");
 const secondForm = document.getElementById("form2");
 const container = document.querySelector(".container");
 
-signInBtn.addEventListener("click", () => {
+logInBtn.addEventListener("click", () => {
     container.classList.remove("right-panel-active");
 });
 
@@ -31,7 +31,6 @@ function signup() {
     let name = $('#username').val();
     let password = $('#password').val();
     let email = $('#email').val();
-    const RegExp = /^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{3,20}$/;
     const RegExp2 = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     const RegExp3 = /^[a-zA-Z0-9]{4,10}$/;
     const num = password.search(/[0-9]/g);
@@ -168,18 +167,4 @@ function onLogin() {
                 title: '가입한 내역 여부 혹은 로그인 정보를 확인부탁드립니다.'
             })
         });
-}
-
-function onclickAdmin() {
-    // Get the checkbox
-    var checkBox = document.getElementById("admin-check");
-    // Get the output text
-    var box = document.getElementById("admin-token");
-
-    // If the checkbox is checked, display the output text
-    if (checkBox.checked == true) {
-        box.style.display = "block";
-    } else {
-        box.style.display = "none";
-    }
 }
