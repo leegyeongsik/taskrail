@@ -58,9 +58,7 @@ public class BoardController {
     }
 
     @GetMapping("/{board_id}") // 상세 보드
-    public String getTargetBoard(@PathVariable Long board_id,@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public BoardResponseDto getTargetBoard(@PathVariable Long board_id,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return boardService.getTargetBoard(board_id, userDetails.getUser());
     }
-
-
 }

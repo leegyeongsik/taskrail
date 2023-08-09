@@ -29,21 +29,20 @@ public class UserController {
 
 
     // 사용자 정보 수정 API
-    @PutMapping("/users/{id}")
+    @PutMapping("/users")
     public void updateUser(
-            @PathVariable Long id,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody UserRequestDto requestDto) {
-        userService.updateUser(id, requestDto,userDetails.getUser());
+        userService.updateUser(requestDto,userDetails.getUser());
     }
 
 
     // 사용자 정보 삭제 API
-    @DeleteMapping("/users/{id}")
-    public void updateUser(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.deleteUser(id, userDetails.getUser());
+    @DeleteMapping("/users")
+    public void deleteUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody UserRequestDto requestDto) {
+        userService.deleteUser(requestDto,userDetails.getUser());
     }
 
 
