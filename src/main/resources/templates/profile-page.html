@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="#">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <link rel="stylesheet" href="/css/profile-style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <title>사용자 정보 페이지</title>
+</head>
+
+<body>
+<div class="container left-panel-active">
+
+  <!-- 사용자 회원 탈퇴 -->
+  <div class="container__form container--remove">
+    <div class="form" id="form1">
+      <h2 class="form__title">회원 탈퇴</h2>
+      <input type="text" placeholder="아이디" name="username" id="removeUsername" class="input" readonly/>
+      <input type="password" placeholder="비밀번호" name="removePassword" id="removePassword" class="input"/>
+      <a href="" id="showRemovePwBtn" style="margin-left: -70%; font-size:14px;">Show Password</a>
+      <button class="btn" onclick="removeUser()">탈퇴하기</button>
+    </div>
+  </div>
+
+  <!-- 사용자 정보 수정 -->
+  <div class="container__form container--update">
+    <div class="form" id="form2">
+      <h2 class="form__title">정보 수정</h2>
+      <input type="text" placeholder="아이디" name="username" id="updateUsername" class="input" readonly/>
+      <input type="password" placeholder="기존 비밀번호 입력" name="oldPassword" id="oldPassword" class="input"/>
+      <a href="" id="showOldPwBtn" style="margin-left: -70%; font-size:14px;">Show Password</a>
+      <input type="password" placeholder="새 비밀번호 입력" name="newPassword" id="newPassword" class="input"/>
+      <a href="" id="showNewPwBtn" style="margin-left: -70%; font-size:14px;">Show Password</a>
+      <input type="email" placeholder="이메일 입력" name="email" id="email" class="input"/>
+      <button class="btn" onclick="updateUser()">수정하기</button>
+    </div>
+  </div>
+
+
+  <!-- Overlay -->
+  <div class="container__overlay">
+    <div class="overlay">
+      <div class="overlay__panel overlay--left">
+        <button class="btn" id="update">회원 수정</button>
+      </div>
+      <div class="overlay__panel overlay--right">
+        <button class="btn" id="remove">회원 탈퇴</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+<script type="application/javascript" src="/js/profile.js"></script>
+</html>
