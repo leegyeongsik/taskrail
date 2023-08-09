@@ -32,15 +32,29 @@ public class User {
     @Column(nullable = false)
     private String password; // 비밀번호
 
+    private Long kakaoId;
+
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
+    public User(String name, String email, String password, Long kakaoId) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.kakaoId = kakaoId;
+    }
+
     public void update(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public User kakaoIdUpdate(long kakaoId){
+        this.kakaoId = kakaoId;
+        return this;
     }
 
 }
