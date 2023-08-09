@@ -1,9 +1,15 @@
 package com.taskrail.dto;
 
 import com.taskrail.entity.Card;
+import com.taskrail.entity.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 public class CardResponseDto {
@@ -13,6 +19,7 @@ public class CardResponseDto {
     private String color;
     private Long orders;
     private LocalDateTime due_Date;
+    private List<CommentResponseDto> commentList;
 
 
     public CardResponseDto(Card card) {
@@ -22,5 +29,8 @@ public class CardResponseDto {
         this.color = card.getColor();
         this.orders = card.getOrders();
         this.due_Date = card.getDue_date();
+        this.commentList = card.getCommentList().stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
+
+
 }
