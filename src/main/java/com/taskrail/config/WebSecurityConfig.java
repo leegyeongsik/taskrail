@@ -1,6 +1,8 @@
 package com.taskrail.config;
 
-
+import org.springframework.web.cors.CorsConfiguration; // 꼭 체크!!
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource; // 꼭 체크!!
+import org.springframework.web.filter.CorsFilter; // 꼭 체크!!
 import com.taskrail.jwt.JwtUtil;
 import com.taskrail.security.JwtAuthenticationFilter;
 import com.taskrail.security.JwtAuthorizationFilter;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -73,11 +76,13 @@ public class WebSecurityConfig {
         );
 
 
+
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
 }
