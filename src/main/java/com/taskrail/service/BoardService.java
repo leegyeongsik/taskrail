@@ -1,12 +1,7 @@
 package com.taskrail.service;
 
-import com.taskrail.dto.BoardInviteRequestDto;
-import com.taskrail.dto.BoardRequestDto;
-import com.taskrail.dto.BoardResponseDto;
-import com.taskrail.dto.UserResponseDto;
-import com.taskrail.entity.Board;
-import com.taskrail.entity.BoardRole;
-import com.taskrail.entity.User;
+import com.taskrail.dto.*;
+import com.taskrail.entity.*;
 import com.taskrail.repository.BoardRepository;
 import com.taskrail.repository.BoardRoleRepository;
 import com.taskrail.repository.UserRepository;
@@ -80,8 +75,24 @@ public class BoardService {
         return userResponseDtoList;
     }
 
-    public String getTargetBoard(Long boardId, User user) {
-        return null;
+    public BoardResponseDto getTargetBoard(Long boardId, User isuser) {
+        Optional<Board> isBoard=boardRepository.findById(boardId);
+        Board board = isBoard.get();
+        User user = board.getUser();
+
+        Long BoardCnt=boardRepository.getBoardCount(board.getBoardId())+1;
+        List<Columns> columnsList=boardRepository.getDetailBoard(board.getBoardId());
+        List<ColumnResponseDto> columnResponseDtoList = new ArrayList<>();
+
+        for (Columns columns : columnsList) {
+            List<CardResponseDto> cardResponseDtoList = new ArrayList<>();
+            List<Card> cardList = boardRepository.getColumnCard(columns.getId());
+            for (Card card : cardList) {
+                cardResponseDtoList.add(new CardResponseDto(card));
+            }
+            columnResponseDtoList.add(new ColumnResponseDto(columns,cardResponseDtoList));
+        }
+        return new BoardResponseDto(board,new UserResponseDto(user) ,BoardCnt,columnResponseDtoList);
     }
     public String deleteBoard(Long board_id,User confirmUser){
         Board board=confirmOwnedBoard(confirmUser,board_id);

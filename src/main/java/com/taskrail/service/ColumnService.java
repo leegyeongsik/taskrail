@@ -1,6 +1,7 @@
 package com.taskrail.service;
 
 import com.taskrail.dto.ColumnRequestDto;
+import com.taskrail.dto.ColumnResponseDto;
 import com.taskrail.dto.UserResponseDto;
 import com.taskrail.entity.Board;
 import com.taskrail.entity.Columns;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +24,18 @@ public class ColumnService {
     private final BoardService boardService;
 
 
+    // 모든 컬럼 조회
+    public List<ColumnResponseDto> getAllColumns() {
+        List<Columns> columns = columnRepository.findAll();
+        // Columns 엔티티를 ColumnResponseDto로 변환하여 반환
+        return columns.stream()
+                .map(ColumnResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     // 컬럼 생성
     //@Transactional
-    public Columns createColumn(User user, ColumnRequestDto columnRequestDto) {
+    public ColumnResponseDto createColumn(User user, ColumnRequestDto columnRequestDto) {
 
         Board board = findBoard(columnRequestDto.getBoardId());
 
@@ -41,7 +52,7 @@ public class ColumnService {
 
         Columns savedColumn = columnRepository.save(column);
 
-        return savedColumn;
+        return new ColumnResponseDto(savedColumn);
     }
 
 
