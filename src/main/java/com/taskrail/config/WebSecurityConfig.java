@@ -68,13 +68,8 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/main").permitAll() // 메인 페이지 요청 허가
-                        .requestMatchers("/cover").permitAll() // 커버 페이지 요청 허가
-                        .requestMatchers("/login").permitAll() // 로그인, 회원가입 페이지 요청 허가
-                        .requestMatchers("/profile").permitAll() // 사용자 정보 수정,탈퇴 페이지 요청 허가 -> 클라이언트 측에서 거부함.
+                        .requestMatchers("/view/**").permitAll() // viewLoad URI 요청 모두 허가
                         .requestMatchers("/api/users/**").permitAll() // 회원가입, 로그인으로 시작하는 요청 모두 접근 허가
-                        //.requestMatchers(HttpMethod.GET,"/api/post/**").permitAll() // 선택 게시글 조회
-                        //.requestMatchers("/api/post/**").authenticated()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
