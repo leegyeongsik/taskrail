@@ -53,12 +53,11 @@
 <h1 th:text="${board.title}"></h1>
 
 <div class="column-container">
-    <div th:each="column : ${columns}" class="column">
+    <div th:each="column : ${columns}" class="column" th:id="${'column-' + column.id}">
         <div class="column-header">
             <h3 th:id="${'column-name-' + column.id}" th:text="${column.name}"></h3>
             <button class="edit-column-btn" th:id="${column.id}">Edit</button>
-            <button class="delete-column-btn" id="delete-column-${column.id}">X</button>
-        </div>
+            <button class="delete-column-btn" th:id="${'delete-column-' + column.id}">X</button>
         </div>
         <div th:each="card : ${column.cards}" class="card">
             <p th:text="${card.title}"></p>
@@ -100,6 +99,7 @@
         deleteButtons.forEach(button => {
             button.addEventListener("click", function () {
                 const columnId = button.id.split("-")[2]; // 버튼 ID에서 컬럼 ID 추출
+                console.log(columnId);
                 deleteColumn(columnId);
             });
         });
@@ -190,7 +190,32 @@
 
     // 컬럼 삭제
 
+    function deleteColumn(columnId) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("DELETE", `/api/columns/${columnId}`, true);
+        xhr.setRequestHeader("Authorization", Cookies.get('Authorization'));
 
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // 삭제 성공 시, 해당 칼럼을 화면에서 제거
+                    const deletedColumnId = parseInt(columnId);
+                    removeColumnFromDOM(deletedColumnId);
+                } else {
+                    alert("Error deleting column");
+                }
+            }
+        };
+
+        xhr.send();
+    }
+
+    function removeColumnFromDOM(columnId) {
+        const columnElement = document.querySelector(`#column-${columnId}`);
+        if (columnElement) {
+            columnElement.remove();
+        }
+    }
 
 
 
