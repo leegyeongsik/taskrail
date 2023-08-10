@@ -102,7 +102,7 @@ $(document).ready(function () {
       title: '로그인 요망',
       text: '로그인 후에 요청 부탁드립니다.',
     }).then(function () {
-      window.location.href = "/login";
+      window.location.href = "/view/login";
     })
   }
 });
@@ -152,7 +152,7 @@ function removeToken() {
     title: '로그인 요망',
     text: '인증이 만료되어 재로그인 부탁드립니다.',
   }).then(function () {
-    window.location.href = "/main";
+    window.location.href = "/view/login";
   })
 }
 
@@ -231,7 +231,7 @@ function updateUser() {
       icon: 'success',
       title: '수정에 성공하였습니다.'
     }).then(function () {
-      window.location.href = "/main";
+      window.location.href = "/view/main";
     })
   })
   .fail(function (jqXHR, textStatus, error) {
@@ -271,7 +271,7 @@ function removeUser() {
       title: '회원을 탈퇴하였습니다.'
     }).then(function () {
       Cookies.remove('Authorization', {path: '/'});
-      window.location.href="/main";
+      window.location.href="/view/main";
     })
   })
   .fail(function (jqXHR, textStatus, error) {

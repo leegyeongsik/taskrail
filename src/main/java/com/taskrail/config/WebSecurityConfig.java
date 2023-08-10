@@ -68,12 +68,9 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/columns/**").permitAll() // 회원가입, 로그인으로 시작하는 요청 모두 접근 허가
-                        .requestMatchers("/view/**").permitAll() // 요청 허가
-
+                        .requestMatchers("/view/**").permitAll() // viewLoad URI 요청 모두 허가
                         .requestMatchers("/api/users/**").permitAll() // 회원가입, 로그인으로 시작하는 요청 모두 접근 허가
-                        //.requestMatchers(HttpMethod.GET,"/api/post/**").permitAll() // 선택 게시글 조회
-                        //.requestMatchers("/api/post/**").authenticated()
+                        .requestMatchers("/api/columns/**").permitAll() // 회원가입, 로그인으로 시작하는 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

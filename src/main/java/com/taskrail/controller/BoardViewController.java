@@ -33,12 +33,12 @@ public class BoardViewController {
         return "board";
     }
 
-    @GetMapping("view/main/create")
+    @GetMapping("/main/create")
     public String MainPageCreateBoard() {
         return "createboard";
     }
 
-    @GetMapping("view/main/{tagId}/edit")
+    @GetMapping("/main/{tagId}/edit")
     public String MainPageEditBoard(@PathVariable Long tagId, Model model) {
         BoardResponseDto boardResponseDto = new BoardResponseDto(boardRepository.findById(tagId).get());
         model.addAttribute("Board" , boardResponseDto);

@@ -188,7 +188,7 @@ function onLogin() {
                 icon: 'success',
                 title: loginUsername + '님 환영합니다!'
             }).then(function () {
-                window.location.href = "/main"
+                window.location.href = "/view/main"
             })
         })
         .fail(function (jqXHR, textStatus) {
