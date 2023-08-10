@@ -8,19 +8,23 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class ColumnResponseDto {
+    private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "column")
-    private List<Card> cards = new ArrayList<>();
+    private List<CardResponseDto> cards = new ArrayList<>();
+
     private List<CardResponseDto> cardResponseDtos = new ArrayList<>();
 
 
     public ColumnResponseDto(Columns column) {
+        this.id = column.getId();
         this.name = column.getName();
+        this.cards = column.getCards().stream().map(CardResponseDto::new).collect(Collectors.toList());
     }
 
     public ColumnResponseDto(Columns column , List<CardResponseDto> cardResponseDtoList) {

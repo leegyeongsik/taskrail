@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 public class CardRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cardId", nullable = false)
+    @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
     @Builder

@@ -1,6 +1,7 @@
 package com.taskrail.controller;
 
 import com.taskrail.dto.ColumnRequestDto;
+import com.taskrail.dto.ColumnResponseDto;
 import com.taskrail.entity.Columns;
 import com.taskrail.security.UserDetailsImpl;
 import com.taskrail.service.ColumnService;
@@ -10,7 +11,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ColumnController {
@@ -18,7 +21,7 @@ public class ColumnController {
 
     // 컬럼 생성
     @PostMapping("/columns")
-    public Columns createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
+    public ColumnResponseDto createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
         return columnService.createColumn(userDetails.getUser(), columnRequestDto);
     }
 

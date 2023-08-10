@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -35,8 +38,8 @@ public class Columns {
     @JoinColumn(name = "BoardId")
     private Board board;
 
-//    @OneToMany(mappedBy = "columns",  cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Card> cards = new ArrayList<>();
+    @OneToMany(mappedBy = "column",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Card> cards = new ArrayList<>();
 
 
     /**

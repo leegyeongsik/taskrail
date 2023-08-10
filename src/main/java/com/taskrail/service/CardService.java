@@ -3,6 +3,7 @@ package com.taskrail.service;
 import com.taskrail.dto.CardAssignUserRequestDto;
 import com.taskrail.dto.CardRequestDto;
 import com.taskrail.dto.CardResponseDto;
+import com.taskrail.dto.CommentResponseDto;
 import com.taskrail.entity.*;
 import com.taskrail.repository.CardRepository;
 import com.taskrail.repository.CardRoleRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +27,7 @@ public class CardService {
     private final CardRoleRepository cardRoleRepository;
     public List<CardResponseDto> getCards(Long columnId) {
         return cardRepository.findAllByColumn_IdOrderByOrdersDesc(columnId).stream().map(CardResponseDto::new).toList();
+
     }
 
     public void createCard(Long columnId, CardRequestDto requestDto, User user) {
@@ -37,14 +40,20 @@ public class CardService {
 
         List<Card> cards = cardRepository.findAll();
 
+
         try{
             Long orders = cards.get(cards.size() - 1).getOrders();
             Card card = new Card(requestDto, column, orders+1, user);
+
             cardRepository.save(card);
+            cardRoleRepository.save(new CardRole(card,user));
         }catch (IndexOutOfBoundsException e){
             Long orders = 1L;
             Card card = new Card(requestDto, column, orders, user);
+
+
             cardRepository.save(card);
+            cardRoleRepository.save(new CardRole(card,user));
         }
 
 
@@ -174,16 +183,26 @@ public class CardService {
         if(!card.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("작성한 유저가 아닙니다.");
         }
-        //카드 작성자 추가
-        requestDto.add(user.getId());
 
-        //할당 인원 추가
-        List<Long>userIdList=requestDto.getUser_id();
+        List<Long> userIdList = requestDto.getUser_id();
+        List<CardRole> cardRoleList = cardRoleRepository.findAllByCard_Id(cardId);
+
 
         for (Long userId : userIdList) {
             User addUser = userRepository.findById(userId).orElseThrow(
                     () -> new NullPointerException("유저가 없습니다.")
             );
+
+            for (CardRole cardRole : cardRoleList) {
+
+                if(cardRole.getUser().getId().equals(userId)){
+                    if(!cardRole.getUser().getId().equals(user.getId())){
+                        throw new IllegalArgumentException("이미 할당된 유저가 있습니다.");
+                    }
+                }
+            }
+
+
             CardRole cardRole = new CardRole(card,addUser);
             cardRoleRepository.save(cardRole);
         }
