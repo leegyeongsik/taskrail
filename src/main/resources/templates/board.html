@@ -172,21 +172,75 @@
         xhr.send(requestData);
     }
 
+    // function addNewColumnToDOM(column) {
+    //     const columnContainer = document.querySelector(".column-container");
+    //     const newColumnDiv = document.createElement("div");
+    //     newColumnDiv.className = "column";
+    //     newColumnDiv.innerHTML = `
+    //     <div class="column-header">
+    //         <h3 id="column-name-${column.id}"">${column.name}</h3>
+    //         <button class="edit-column-btn" id="${column.id}">Edit</button>
+    //     </div>
+    //     <button class="add-card-button">+ Add Card</button>
+    // `;
+    //
+    //     columnContainer.appendChild(newColumnDiv);
+    //     // 이후 필요한 추가 작업을 수행할 수 있습니다.
+    // }
+
+    // 새로운 칼럼을 DOM에 추가하는 함수
     function addNewColumnToDOM(column) {
         const columnContainer = document.querySelector(".column-container");
         const newColumnDiv = document.createElement("div");
         newColumnDiv.className = "column";
-        newColumnDiv.innerHTML = `
-        <div class="column-header">
-            <h3 id="column-name-${column.id}"">${column.name}</h3>
-            <button class="edit-column-btn" id="${column.id}">Edit</button>
-        </div>
-        <button class="add-card-button">+ Add Card</button>
+
+        const columnHeaderDiv = document.createElement("div");
+        columnHeaderDiv.className = "column-header";
+        columnHeaderDiv.innerHTML = `
+        <h3 id="column-name-${column.id}">${column.name}</h3>
+        <button class="edit-column-btn" id="${column.id}">Edit</button>
+        <button class="delete-column-btn" id="delete-column-${column.id}">X</button>
     `;
+        newColumnDiv.appendChild(columnHeaderDiv);
+
+        // 카드 출력을 위한 카드 컨테이너 추가
+        const cardContainer = document.createElement("div");
+        cardContainer.className = "card-container";
+        newColumnDiv.appendChild(cardContainer);
+
+        // 각 카드 정보를 추가
+        column.cards.forEach(card => {
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "card";
+            cardDiv.innerHTML = `
+            <p>${card.title}</p>
+            <p>${card.content}</p>
+        `;
+            cardContainer.appendChild(cardDiv);
+        });
+
+        // 카드 추가 버튼
+        const addCardButton = document.createElement("button");
+        addCardButton.className = "add-card-button";
+        addCardButton.textContent = "+ Add Card";
+        newColumnDiv.appendChild(addCardButton);
 
         columnContainer.appendChild(newColumnDiv);
-        // 이후 필요한 추가 작업을 수행할 수 있습니다.
+
+        // 새로운 컬럼에 이벤트 핸들러 등록
+        const editColumnBtn = newColumnDiv.querySelector(".edit-column-btn");
+        editColumnBtn.addEventListener("click", function() {
+            const columnId = editColumnBtn.id;
+            editColumn(columnId);
+        });
+
+        const deleteColumnBtn = newColumnDiv.querySelector(".delete-column-btn");
+        deleteColumnBtn.addEventListener("click", function() {
+            const columnId = deleteColumnBtn.id.split("-")[2];
+            deleteColumn(columnId);
+        });
     }
+
 
     // 컬럼 삭제
 
@@ -198,9 +252,7 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    // 삭제 성공 시, 해당 칼럼을 화면에서 제거
-                    const deletedColumnId = parseInt(columnId);
-                    removeColumnFromDOM(deletedColumnId);
+                    location.reload();
                 } else {
                     alert("Error deleting column");
                 }
@@ -210,12 +262,6 @@
         xhr.send();
     }
 
-    function removeColumnFromDOM(columnId) {
-        const columnElement = document.querySelector(`#column-${columnId}`);
-        if (columnElement) {
-            columnElement.remove();
-        }
-    }
 
 
 
