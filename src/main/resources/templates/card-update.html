@@ -81,7 +81,8 @@
                                         <input type="text" class="h4 my-4" id="card_title" name="card_title" value="${title}">
                                     </div>
                                     <div>
-                                        <input type="text" name="card_color" id="card_color" class="h5 d-inline" value="${color}">
+                                    <label for="color-picker" style="">카드 색상:</label>
+                                        <input type="color" name="color-picker" id="color-picker" class="h5 d-inline" value="${color}">
                                     </div>
                                 </div>
                                 <textarea class="m-3 form-control" rows="12" id="card_content" name="card_content">${content}</textarea>
@@ -137,7 +138,7 @@
             let title = document.getElementById('card_title').value;
             let content = document.getElementById('card_content').value;
             let due_date = document.getElementById('card_due_date').value;
-            let color = document.getElementById('card_color').value;
+            let color = document.getElementById('color-picker').value;
             let updatedData = {
                 title: title,
                 content: content,
@@ -173,5 +174,28 @@
 <body>
 <div class="container" style="width: 978px; margin-top: 100px">
 </div>
+<script>
+    let colorPicker;
+    const defaultColor = "#0000ff";
+    window.addEventListener("load", startup, false);
+    function startup() {
+        colorPicker = document.querySelector("#color-picker");
+        colorPicker.value = defaultColor;
+        colorPicker.addEventListener("input", updateFirst, false);
+        colorPicker.select();
+    }
+
+    function updateFirst(event) {
+        const p = document.querySelector("p");
+        if (p) {
+            const temp_color = event.target.value;
+            const RGB= temp_color
+            // const hex = getHEX(RGB);
+            // console.log(RGB)
+            // console.log(event.target.value)
+            $('input[name=target]').attr('value',RGB)
+        }
+    }
+</script>
 </body>
 </html>
