@@ -2,13 +2,16 @@ package com.taskrail.controller;
 
 import com.taskrail.dto.ColumnRequestDto;
 import com.taskrail.dto.ColumnResponseDto;
+import com.taskrail.entity.Board;
 import com.taskrail.entity.Columns;
 import com.taskrail.security.UserDetailsImpl;
 import com.taskrail.service.ColumnService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,17 +22,25 @@ import java.util.List;
 public class ColumnController {
     private final ColumnService columnService;
 
+    @GetMapping("/columns/{boardId}")
+    public ResponseEntity<List<ColumnResponseDto>> getColumns(@PathVariable Long boardId) {
+        Board board = columnService.findBoard(boardId);
+        List<ColumnResponseDto> columns = columnService.getBoardColumns(board);
+        return ResponseEntity.ok(columns);
+    }
+
     // 컬럼 생성
     @PostMapping("/columns")
-    public ColumnResponseDto createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
-        return columnService.createColumn(userDetails.getUser(), columnRequestDto);
+    public ResponseEntity<ColumnResponseDto> createColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ColumnRequestDto columnRequestDto) {
+        ColumnResponseDto columnResponseDto = columnService.createColumn(userDetails.getUser(), columnRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(columnResponseDto);
     }
 
     // 컬럼 이름 수정
     @PutMapping("/columns/{id}")
-    public ResponseEntity<String> updateColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody ColumnRequestDto columnRequestDto) {
-        columnService.updateColumnTitle(userDetails.getUser(), id, columnRequestDto);
-        return ResponseEntity.ok("컬럼 이름이 변경 됐습니다.");
+    public ResponseEntity<ColumnResponseDto> updateColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody ColumnRequestDto columnRequestDto) {
+        ColumnResponseDto updatedColumn = columnService.updateColumnTitle(userDetails.getUser(), id, columnRequestDto);
+        return ResponseEntity.ok(updatedColumn);
     }
 
     // 컬럼 삭제
