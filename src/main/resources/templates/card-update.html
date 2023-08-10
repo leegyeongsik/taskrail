@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>카드 수정 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
+    <script>
+        let jwtCookie_temp = getCookieValueByName('Authorization');
+        let jwtCookie = removeBearerPrefix(jwtCookie_temp);
+        function getCookieValueByName(name) {
+            let cookie = document.cookie;
+            let cookiePairs = cookie.split(';');
+
+            for (let i = 0; i < cookiePairs.length; i++) {
+
+                let pair = cookiePairs[i].trim();
+                if (pair.startsWith(name + '=')) {
+                    return pair.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+
+        function removeBearerPrefix(jwtCookie) {
+            const prefix = "Bearer%20";
+            if (jwtCookie.startsWith(prefix)) {
+                return jwtCookie.substring(prefix.length);
+            }
+            return jwtCookie;
+        }
+
+        let cardId = [[${cardId}]];
+        window.onload = function() {
+            getCardData();
+        }
+
+        function getCardData() {
+            fetch('/api/cards/'+cardId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.status === 400) {
+                        alert('요청이 실패했습니다.');
+                    }
+                    return response.json(); // JSON 형태의 응답 데이터 파싱
+                })
+                .then(data => {
+                    console.log(data);
+                    let due_date = data.due_Date;
+                    let title = data.title;
+                    let content = data.content;
+                    let color = data.color;
+                    let cardRoleList = data.cardRoleResponseDtoList;
+                    let commentList = data.commentList;
+
+                    let temp_html=`
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-between mb-5">
+                                    <h4 class="h4 fw-bold">카드 수정화면</h4>
+                                    <div>
+                                        <h5 class="h5">만료기한 : </h5>
+                                        <input type="text" class="h4" id="card_due_date" name="card_due_date" value="${due_date}">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="h5 d-inline">카드 제목 : </h5>
+                                        <input type="text" class="h4 my-4" id="card_title" name="card_title" value="${title}">
+                                    </div>
+                                    <div>
+                                    <label for="color-picker" style="">카드 색상:</label>
+                                        <input type="color" name="color-picker" id="color-picker" class="h5 d-inline" value="${color}">
+                                    </div>
+                                </div>
+                                <textarea class="m-3 form-control" rows="12" id="card_content" name="card_content">${content}</textarea>
+
+                                <div class="btn-group mt-4 d-flex justify-content-around">
+                                    <button class="btn btn-dark me-5" onclick="updateRoleUser()">작업인원변경</button>
+                                    <button class="btn btn-dark me-5" onclick="updateCard(cardId)">수정완료</button>
+                                    <a class="btn btn-dark" href="/view/cards/${cardId}">뒤로가기</a>
+                                </div>
+                                <div class="mt-5">
+                                    <h5 class="h5">작업 인원</h5>
+                                    <div class="work-userList">
+`;
+
+                    let user_role_html = '';
+                    for(let i=0; i<cardRoleList.length; i++) {
+                        let role_user = cardRoleList[i].userName;
+
+                        let temp_html2 = `
+                                        <span class="me-3">${role_user}</span>
+                        `;
+
+                        user_role_html += temp_html2;
+                    }
+                    let temp_html3 = `
+                                    </div>
+                                </div>
+                                <div class="mt-5">
+                                    <h5 class="h5">댓글</h5>
+                                    <label for="comment-input"></label>
+                                    <textarea class="comment-input form-control col-sm-5" id="comment-input" rows="5" placeholder="댓글을 입력하세요"></textarea>
+                                    <button class="btn btn-dark mt-3">작성</button>
+                                    <div class="commentList-box mt-5">
+`;
+
+                    let temp_html5 =
+                        `
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    let box_html = `${temp_html}${user_role_html}${temp_html5}`;
+                    $('.container').append(box_html);
+                })
+                .catch(error => {
+                    // 오류 처리 로직을 작성합니다.
+                    console.error(error);
+                });
+        }
+
+        function updateCard(cardId){
+            let title = document.getElementById('card_title').value;
+            let content = document.getElementById('card_content').value;
+            let due_date = document.getElementById('card_due_date').value;
+            let color = document.getElementById('color-picker').value;
+            let updatedData = {
+                title: title,
+                content: content,
+                due_date: due_date,
+                color : color
+            };
+
+            let url = "/api/cards/"+cardId;
+
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        console.log('카드가 성공적으로 수정되었습니다.');
+                    } else {
+                        console.log('카드 수정에 실패했습니다.');
+                    }
+                    return response; // 이 부분을 추가합니다.
+                })
+                .catch(function (error) {
+                    console.log('카드 수정 중 오류가 발생했습니다.', error);
+                });
+        }
+
+    </script>
+</head>
+<body>
+<div class="container" style="width: 978px; margin-top: 100px">
+</div>
+<script>
+    let colorPicker;
+    const defaultColor = "#0000ff";
+    window.addEventListener("load", startup, false);
+    function startup() {
+        colorPicker = document.querySelector("#color-picker");
+        colorPicker.value = defaultColor;
+        colorPicker.addEventListener("input", updateFirst, false);
+        colorPicker.select();
+    }
+
+    function updateFirst(event) {
+        const p = document.querySelector("p");
+        if (p) {
+            const temp_color = event.target.value;
+            const RGB= temp_color
+            // const hex = getHEX(RGB);
+            // console.log(RGB)
+            // console.log(event.target.value)
+            $('input[name=target]').attr('value',RGB)
+        }
+    }
+</script>
+</body>
+</html>
