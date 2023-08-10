@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
     <title>카드 수정 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -90,7 +91,7 @@
                                 <div class="btn-group mt-4 d-flex justify-content-around">
                                     <button class="btn btn-dark me-5" onclick="updateRoleUser()">작업인원변경</button>
                                     <button class="btn btn-dark me-5" onclick="updateCard(cardId)">수정완료</button>
-                                    <a class="btn btn-dark" href="/view/cards/${cardId}">뒤로가기</a>
+                                    <a class="btn btn-dark" href="javascript:window.history.back();">뒤로가기</a>
                                 </div>
                                 <div class="mt-5">
                                     <h5 class="h5">작업 인원</h5>
@@ -159,7 +160,7 @@
                 .then(function (response) {
                     if (response.ok) {
                         console.log('카드가 성공적으로 수정되었습니다.');
-                    } else {
+                        history.back();                    } else {
                         console.log('카드 수정에 실패했습니다.');
                     }
                     return response; // 이 부분을 추가합니다.

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
     <title>카드 상세페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -82,7 +83,7 @@
                                     <button class="btn btn-dark me-5" onclick="addUser()">작업인원추가</button>
                                     <button class="btn btn-dark me-5" onclick="updateCardPage(cardId)">카드수정</button>
                                     <button class="btn btn-dark me-5" onclick="deleteCard(cardId)">카드삭제</button>
-                                    <a class="btn btn-dark" href="javascript:window.location.back()">뒤로가기</a>
+                                    <a class="btn btn-dark" href="javascript:window.history.back();">뒤로가기</a>
                                 </div>
                                 <div class="mt-5">
                                     <h5 class="h5">작업 인원</h5>
@@ -158,6 +159,7 @@
                 .then(function(response) {
                     if (response.ok) {
                         console.log('카드가 성공적으로 삭제되었습니다.');
+                        history.back();
                     } else {
                         console.log('카드 삭제에 실패했습니다.');
                     }
