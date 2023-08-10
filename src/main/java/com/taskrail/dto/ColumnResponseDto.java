@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class ColumnResponseDto {
     private Long id;
     private String name;
+    private int pos;
 
     private List<CardResponseDto> cards = new ArrayList<>();
 
@@ -24,6 +25,7 @@ public class ColumnResponseDto {
     public ColumnResponseDto(Columns column) {
         this.id = column.getId();
         this.name = column.getName();
+        this.pos = column.getPos();
         this.cards = column.getCards().stream().map(CardResponseDto::new).collect(Collectors.toList());
     }
 

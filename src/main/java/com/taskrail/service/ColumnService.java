@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +25,13 @@ public class ColumnService {
     private final BoardService boardService;
 
 
-    // 모든 컬럼 조회
-    public List<ColumnResponseDto> getAllColumns() {
-        List<Columns> columns = columnRepository.findAll();
-        // Columns 엔티티를 ColumnResponseDto로 변환하여 반환
-        return columns.stream()
+    // 보드 내 모든 컬럼 조회
+    public List<ColumnResponseDto> getBoardColumns(Board board) {
+        List<ColumnResponseDto> columns = board.getColumns().stream()
                 .map(ColumnResponseDto::new)
+                .sorted(Comparator.comparing(ColumnResponseDto::getPos))
                 .collect(Collectors.toList());
+        return columns;
     }
 
     // 컬럼 생성
@@ -58,16 +59,17 @@ public class ColumnService {
 
     // 컬럼 이름 변경
     @Transactional
-    public void updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
+    public ColumnResponseDto updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
         Board board = findBoard(columnRequestDto.getBoardId());
 
         if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
-
         Columns column = findColumn(id);
         column.setName(columnRequestDto.getName());
+
+        return new ColumnResponseDto(column);
     }
 
     // 컬럼 삭제

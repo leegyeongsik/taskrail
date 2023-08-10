@@ -3,8 +3,14 @@ package com.taskrail.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -29,6 +35,7 @@ public class JwtUtil {
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+    public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
     @PostConstruct
     public void init() {
@@ -48,6 +55,22 @@ public class JwtUtil {
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
     }
+
+    // header 에 JWT 토큰 인코딩(공백처리) 하여 쿠키에 값 세팅 후 쿠키를 헤더에 세팅
+    public void addJwtToHeader(String token, HttpServletResponse res) {
+        try {
+            token = URLEncoder.encode(token, "utf-8")
+                .replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+            Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER,token);
+            cookie.setPath("/");
+            res.addCookie(cookie);
+
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
