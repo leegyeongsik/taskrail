@@ -22,22 +22,19 @@ public class BoardService {
     private final UserRepository userRepository;
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto , User user) { // 보드 생성
         Board board =  Board.builder().title(boardRequestDto.getTitle()).color(boardRequestDto.getColor()).description(boardRequestDto.getDescription()).user(user).build();
-        System.out.println(board);
         boardRepository.save(board);
+        BoardRole boardRole = BoardRole.builder().board(board).user(user).build();
+        boardRoleRepository.save(boardRole);
+
         return new BoardResponseDto(board);
     }
 
     @Transactional(readOnly = true)
     public List<BoardResponseDto> getBoard(User user){ // 자신이 만든 보드 초대받은 보드 두개를 리스트에 넣어줌 -> +1해주는 이유는 조회하고 cnt를 산출할때 보드를 개설한 사람이 포함되지않아서 cnt+=1
-        List<Board> boardList = boardRepository.findAllByUser_idOrderByCreatedAtDesc(user.getId());
         List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
-        for (Board board : boardList) {
-            Long BoardCnt=boardRepository.getBoardCount(board.getBoardId())+1;
-            boardResponseDtoList.add(new BoardResponseDto(board,new UserResponseDto(board.getUser()) , BoardCnt));
-        }
         List<Board>boardchildList = boardRepository.getBoardchildList(user.getId());
         for (Board board : boardchildList) {
-            Long BoardCnt=boardRepository.getBoardCount(board.getBoardId())+1;
+            Long BoardCnt=boardRepository.getBoardCount(board.getBoardId());
             boardResponseDtoList.add(new BoardResponseDto(board,new UserResponseDto(board.getUser()), BoardCnt));
         }
         return boardResponseDtoList;
@@ -84,7 +81,7 @@ public class BoardService {
         Board board = isBoard.get();
         User user = board.getUser();
 
-        Long BoardCnt=boardRepository.getBoardCount(board.getBoardId())+1;
+        Long BoardCnt=boardRepository.getBoardCount(board.getBoardId());
         List<Columns> columnsList=boardRepository.getDetailBoard(board.getBoardId());
         List<ColumnResponseDto> columnResponseDtoList = new ArrayList<>();
 
