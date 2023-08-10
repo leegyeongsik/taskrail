@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <title>Document</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 300px 300px 300px 300px;
+            gap: 40px;
+            width: 1500px;
+            height: 650px;
+            left: 270px;
+            top: 102px;
+            position: absolute;
+        }
+
+        .container .item {
+            background-color: #fff;
+            border: 1px solid #fff;
+            aspect-ratio: 1;
+            border-radius: 10px;
+
+        }
+
+        .container .item .item_text {
+            margin-left: 20px;
+            display: inline;
+
+        }
+
+        .container .item .item_descripte {
+            margin-left: 23px;
+        }
+
+        .CreateNewBoard {
+            width: 103px;
+            height: 112px;
+            left: 100px;
+            top: 83px;
+            position: absolute;
+            text-align: center;
+            color: black;
+            font-size: 24px;
+            font-family: Poppins;
+            font-weight: 400;
+            word-wrap: break-word;
+        }
+
+        .container .item_edit {
+            margin-left: 23px;
+            margin-top: 130px;
+            font-size: 18px;
+
+        }
+
+        .container .item_delete {
+            margin-left: 265px;
+            display: inline;
+
+        }
+
+        .container .item_move {
+            margin-left: 265px;
+        }
+        .container .item_descripte .btns{
+            border: 0;
+            outline: 0;
+        }
+        .container .CreateNewBoard .btnss{
+            width: 130px;
+            height: 130px;
+            left: -15px;
+            top: 0px;
+            position: absolute;
+            text-align: center;
+            color: black;
+            font-size: 24px;
+            font-family: Poppins;
+            font-weight: 400;
+            word-wrap: break-word;
+            border: 0;
+            outline: 0;
+            background-color: transparent;
+
+        }
+    </style>
+</head>
+
+<body>
+<div class="HomePage" style="width: 1850px; height: 1200px; position: relative; background: white; border: 0.50px">
+
+
+    <div class="Group61">
+        <!-- top  -->
+        <div class="top" style="width: 1850px; height: 158px; left: 0px; top: 0px; position: absolute">
+            <div class="topline"
+                 style="width: 1px; height: 32px; left: 126px; top: 13px; position: absolute; opacity: 0.10; background: black; border-radius: 0.50px"></div>
+            <div class="topline2"
+                 style="width: 1px; height: 32px; left: 251px; top: 13px; position: absolute; opacity: 0.10; background: black; border-radius: 0.50px"></div>
+            <div class="top" style="width: 222px; height: 32px; left: 29px; top: 13px; position: absolute">
+                <div class="graph"
+                     style="width: 24px; height: 24px; left: 141px; top: 28px; position: absolute; transform: rotate(-180deg); transform-origin: 0 0">
+                    <div class="Board"
+                         style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute;  border-radius: 3px"></div>
+                    <div class="RightList"
+                         style="width: 7.32px; height: 10.50px;  top: 4px; position: absolute;   background: black; border-radius: 1.44px"></div>
+                    <div class="LeftList"
+                         style="width: 7.32px; height: 16.50px; left: 8px;  top: 4px;position: absolute;  opacity: 0.20; background: black; border-radius: 1.44px"></div>
+                </div>
+                <!-- top text -->
+                <div class="Boards"
+                     style="left: 146px; top: 4px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+                    Boards
+                </div>
+                <div class="TaskRailtext"
+                     style="left: 0px; top: 4px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+                    TaskRail
+                </div>
+            </div>
+        </div>
+        <div class="Line"
+             style="width: 1850px; height: 3px; left: 0px; top: 79px; position: absolute; opacity: 0.10; background: black"></div>
+        <div class="Boards"
+             style="left: 1773px; top: 32px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+            MyPage
+        </div>
+        <div class="TaskRailtitle"
+             style="width: 282px; height: 158px; left: 811px; top: 0px; position: absolute; text-align: center; color: black; font-size: 48px; font-family: Imprima; font-weight: 400; word-wrap: break-word">
+            Task Rail
+        </div>
+    </div>
+    <!-- top  -->
+
+    <div class="container">
+        <div class="item" style="border: 1px solid #000 ; background-color: #fff; border:2px dashed; padding:10px;">
+            <div class="CreateNewBoard"><button class="btnss" value="create">Create new board</button></div>
+        </div>
+    </div>
+</div>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+            url: `http://localhost:8080/api/boards`,
+            type: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+            },
+            success: function (response) {
+                if (response) {
+                    var list=response
+                    for (var i = 0; i < list.length; i++) {
+                        var boards=`
+                            <div class="item" style="border: 1px solid ${list[i].color}; background-color:${list[i].color};" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+                            <h2 class="item_delete"><button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">X</button></h2>
+                            <h1 class="item_text">${list[i].title}</h1>
+                            <h4 class="item_descripte">
+                                ${list[i].description}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">→</h4></button>
+                            <h4 class="item_edit">
+                                <button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">edit</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+${list[i].boardCnt}</h4>
+                            </div>`
+                        $('.container').append(boards);
+                    }
+                }
+            },
+            error: function () {
+                console.log("실패")
+            }
+        })
+
+            $(document).on('click',"h2[class='item_delete']" , function (e) { // 삭제
+                e.preventDefault();
+                var tagId = e.target.value
+                // console.log(tagId)
+                $.ajax({
+                    url: `http://localhost:8080/api/boards/${tagId}`,
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+                    },
+                    success: function (response) {
+                        if (response) {
+                            window.location.reload();
+                        }
+                    }
+                })
+            })
+
+            $(document).on('click',"h4[class='item_edit']" , function (e) { // 수정
+                e.preventDefault();
+                var tagId = e.target.value
+                console.log(tagId)
+                window.location.href = `http://localhost:8080/view/main/${tagId}/edit`
+
+            })
+
+            $(document).on('click',"h4[class='item_descripte']" , function (e) { // 보드 이동
+                e.preventDefault();
+                var tagId = e.target.value
+                window.location.href = `http://localhost:8080/view/board-page/${tagId}`
+            })
+
+            $(document).on('click',"div[class='CreateNewBoard']" , function (e) { // 보드생성
+                e.preventDefault();
+                var tagId = e.target.value
+                // console.log(tagId)
+                window.location.href = 'http://localhost:8080/view/main/create';
+            })
+
+        })
+
+
+
+    </script>
+</body>
+</html>

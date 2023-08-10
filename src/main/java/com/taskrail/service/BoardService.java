@@ -7,6 +7,7 @@ import com.taskrail.repository.BoardRoleRepository;
 import com.taskrail.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
+    @Transactional(readOnly = true)
     public List<BoardResponseDto> getBoard(User user){ // 자신이 만든 보드 초대받은 보드 두개를 리스트에 넣어줌 -> +1해주는 이유는 조회하고 cnt를 산출할때 보드를 개설한 사람이 포함되지않아서 cnt+=1
         List<Board> boardList = boardRepository.findAllByUser_idOrderByCreatedAtDesc(user.getId());
         List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
@@ -52,6 +54,7 @@ public class BoardService {
         }
         return "성공";
     }
+    @Transactional(readOnly = true)
     public List<UserResponseDto> getBoardUser(Long boardId) {
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         List<User> userList = boardRepository.getBoardUser(boardId);
@@ -60,6 +63,7 @@ public class BoardService {
         }
         return userResponseDtoList;
     }
+    @Transactional(readOnly = true)
     public List<UserResponseDto> getSearch(Long board_id,String name) {
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         List<User> userList = boardRepository.search(name);
@@ -74,7 +78,7 @@ public class BoardService {
         }
         return userResponseDtoList;
     }
-
+    @Transactional(readOnly = true)
     public BoardResponseDto getTargetBoard(Long boardId, User isuser) {
         Optional<Board> isBoard=boardRepository.findById(boardId);
         Board board = isBoard.get();
