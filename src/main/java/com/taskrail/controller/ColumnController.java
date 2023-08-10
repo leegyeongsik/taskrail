@@ -27,9 +27,9 @@ public class ColumnController {
 
     // 컬럼 이름 수정
     @PutMapping("/columns/{id}")
-    public ResponseEntity<String> updateColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody ColumnRequestDto columnRequestDto) {
-        columnService.updateColumnTitle(userDetails.getUser(), id, columnRequestDto);
-        return ResponseEntity.ok("컬럼 이름이 변경 됐습니다.");
+    public ResponseEntity<ColumnResponseDto> updateColumn(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody ColumnRequestDto columnRequestDto) {
+        ColumnResponseDto updatedColumn = columnService.updateColumnTitle(userDetails.getUser(), id, columnRequestDto);
+        return ResponseEntity.ok(updatedColumn);
     }
 
     // 컬럼 삭제

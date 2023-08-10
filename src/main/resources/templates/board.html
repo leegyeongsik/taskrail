@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/2675/2675848.png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <title>Board</title>
     <style>
         .column-container {
@@ -51,7 +55,8 @@
 <div class="column-container">
     <div th:each="column : ${columns}" class="column">
         <div class="column-header">
-            <h3 th:text="${column.name}"></h3>
+            <h3 th:id="${'column-name-' + column.id}" th:text="${column.name}"></h3>
+            <button class="edit-column-btn" th:id="${column.id}">Edit</button>
         </div>
         <div th:each="card : ${column.cards}" class="card">
             <p th:text="${card.title}"></p>
@@ -61,4 +66,63 @@
     </div>
 </div>
 </body>
+<script th:inline="javascript">
+
+    var boardId = [[${board.boardId}]];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const editButtons = document.querySelectorAll(".edit-column-btn");
+        editButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const columnId = button.id;
+
+                console.log(columnId);
+                console.log(boardId);
+
+                editColumn(columnId);
+            });
+        });
+    });
+
+    function editColumn(columnId) {
+        // AJAX 요청 보내기
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", `/api/columns/${columnId}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization", Cookies.get('Authorization'))
+
+        const newColumnName = prompt("Enter the new column name:");
+        const requestData = JSON.stringify({
+            name: newColumnName,
+            boardId: boardId
+        });
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    alert("Column name updated successfully!");
+                    // 서버에서 업데이트한 컬럼 이름으로 화면 업데이트
+                    const updatedColumn = JSON.parse(xhr.responseText);
+                    updateColumnNameInDOM(columnId, updatedColumn.name);
+                } else {
+                    alert("Error updating column name");
+                }
+            }
+        };
+
+        xhr.send(requestData);
+    }
+
+    function updateColumnNameInDOM(columnId, newName) {
+        const columnNameElement = document.querySelector(`#column-name-${columnId}`);
+        if (columnNameElement) {
+            columnNameElement.textContent = newName;
+        }
+    }
+
+
+
+
+</script>
 </html>
