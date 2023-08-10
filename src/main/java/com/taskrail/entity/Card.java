@@ -45,11 +45,11 @@ public class Card extends Timestamped {
     private User user;
 
     //댓글 리스트
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
     List<Comment> commentList = new ArrayList<>();
 
     //유저 할당 리스트
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
     List<CardRole> cardRoleList = new ArrayList<>();
 
     public Card(CardRequestDto requestDto, Columns column, Long orders, User user){
