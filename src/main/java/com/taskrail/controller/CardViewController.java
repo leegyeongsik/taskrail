@@ -18,4 +18,11 @@ public class CardViewController {
         model.addAttribute("cardId", cardId);
         return "card-detail";
     }
+
+    @GetMapping("/cards/{cardId}/update")
+    public String updateCard(@PathVariable String cardId, Model model){
+
+        model.addAttribute("cardId", cardId);
+        return "card-update";
+    }
 }

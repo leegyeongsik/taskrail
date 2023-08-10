@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>카드 상세페이지</title>
+    <title>카드 수정 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,10 +24,10 @@
                 let pair = cookiePairs[i].trim();
                 if (pair.startsWith(name + '=')) {
                     return pair.substring(name.length + 1);
-                    }
                 }
-                return null;
             }
+            return null;
+        }
 
         function removeBearerPrefix(jwtCookie) {
             const prefix = "Bearer%20";
@@ -61,6 +61,7 @@
                     let due_date = data.due_Date;
                     let title = data.title;
                     let content = data.content;
+                    let color = data.color;
                     let cardRoleList = data.cardRoleResponseDtoList;
                     let commentList = data.commentList;
 
@@ -68,21 +69,27 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-between mb-5">
-                                    <h4 class="h4 fw-bold">카드 상세화면</h4>
+                                    <h4 class="h4 fw-bold">카드 수정화면</h4>
                                     <div>
                                         <h5 class="h5">만료기한 : </h5>
-                                        <h4 class="h4">${due_date}</h4>
+                                        <input type="text" class="h4" id="card_due_date" name="card_due_date" value="${due_date}">
                                     </div>
                                 </div>
-                                <h4 class="h4 my-4">${title}</h4>
-                                <div class="border border-2 " style="height: 300px">
-                                    <p class="m-3">${content}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="h5 d-inline">카드 제목 : </h5>
+                                        <input type="text" class="h4 my-4" id="card_title" name="card_title" value="${title}">
+                                    </div>
+                                    <div>
+                                        <input type="text" name="card_color" id="card_color" class="h5 d-inline" value="${color}">
+                                    </div>
                                 </div>
+                                <textarea class="m-3 form-control" rows="12" id="card_content" name="card_content">${content}</textarea>
+
                                 <div class="btn-group mt-4 d-flex justify-content-around">
-                                    <button class="btn btn-dark me-5" onclick="addUser()">작업인원추가</button>
-                                    <button class="btn btn-dark me-5" onclick="updateCardPage(cardId)">카드수정</button>
-                                    <button class="btn btn-dark me-5" onclick="deleteCard(cardId)">카드삭제</button>
-                                    <a class="btn btn-dark" href="javascript:window.location.back()">뒤로가기</a>
+                                    <button class="btn btn-dark me-5" onclick="updateRoleUser()">작업인원변경</button>
+                                    <button class="btn btn-dark me-5" onclick="updateCard(cardId)">수정완료</button>
+                                    <a class="btn btn-dark" href="/view/cards/${cardId}">뒤로가기</a>
                                 </div>
                                 <div class="mt-5">
                                     <h5 class="h5">작업 인원</h5>
@@ -91,7 +98,7 @@
 
                     let user_role_html = '';
                     for(let i=0; i<cardRoleList.length; i++) {
-                                let role_user = cardRoleList[i].userName;
+                        let role_user = cardRoleList[i].userName;
 
                         let temp_html2 = `
                                         <span class="me-3">${role_user}</span>
@@ -109,33 +116,15 @@
                                     <button class="btn btn-dark mt-3">작성</button>
                                     <div class="commentList-box mt-5">
 `;
-                    let comment_html = '';
-                    for(let j = 0; j<commentList.length; j++) {
-                        let comment_username = commentList[j].userName;
-                        let comment_content = commentList[j].content;
 
-                        let temp_html4 = `
-                                        <div class="d-flex justify-content-between">
-                                            <span>${comment_username}</span>
-                                            <div>
-                                                <button class="btn btn-dark">수정</button>
-                                                <button class="btn btn-outline-dark">삭제</button>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2" style="height: 100px">
-                                            <p class="m-3">${comment_content}</p>
-                                        </div>
-                    `;
-                        comment_html += temp_html4;
-                    }
                     let temp_html5 =
-                    `
+                        `
                                     </div>
                                 </div>
                             </div>
                         </div>
                     `
-                    let box_html = `${temp_html}${user_role_html}${temp_html3}${comment_html}${temp_html5}`;
+                    let box_html = `${temp_html}${user_role_html}${temp_html5}`;
                     $('.container').append(box_html);
                 })
                 .catch(error => {
@@ -143,36 +132,46 @@
                     console.error(error);
                 });
         }
-        function updateCardPage(cardId){
-            window.location.href='/view/cards/' + cardId + '/update';
-        }
 
-        function deleteCard(cardId){
-            let url = '/api/cards/'+cardId;
+        function updateCard(cardId){
+            let title = document.getElementById('card_title').value;
+            let content = document.getElementById('card_content').value;
+            let due_date = document.getElementById('card_due_date').value;
+            let color = document.getElementById('card_color').value;
+            let updatedData = {
+                title: title,
+                content: content,
+                due_date: due_date,
+                color : color
+            };
+
+            let url = "/api/cards/"+cardId;
+
             fetch(url, {
-                method: 'DELETE',
+                method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${jwtCookie}`,
+                    'Content-Type': 'application/json'
                 },
+                body: JSON.stringify(updatedData)
             })
-                .then(function(response) {
+                .then(function (response) {
                     if (response.ok) {
-                        console.log('카드가 성공적으로 삭제되었습니다.');
+                        console.log('카드가 성공적으로 수정되었습니다.');
                     } else {
-                        console.log('카드 삭제에 실패했습니다.');
+                        console.log('카드 수정에 실패했습니다.');
                     }
+                    return response; // 이 부분을 추가합니다.
                 })
-                .catch(function(error) {
-                    console.log('게시글 삭제 중 오류가 발생했습니다.', error);
+                .catch(function (error) {
+                    console.log('카드 수정 중 오류가 발생했습니다.', error);
                 });
         }
 
     </script>
 </head>
 <body>
-
 <div class="container" style="width: 978px; margin-top: 100px">
 </div>
-
 </body>
 </html>
