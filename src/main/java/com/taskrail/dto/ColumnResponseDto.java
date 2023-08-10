@@ -1,8 +1,6 @@
 package com.taskrail.dto;
 
-import com.taskrail.entity.Card;
 import com.taskrail.entity.Columns;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +27,7 @@ public class ColumnResponseDto {
         this.cards = column.getCards().stream().map(CardResponseDto::new).collect(Collectors.toList());
     }
 
-    public ColumnResponseDto(Columns column , List<CardResponseDto> cardResponseDtoList) {
+    public ColumnResponseDto(Columns column, List<CardResponseDto> cardResponseDtoList) {
         this.name = column.getName();
         this.cardResponseDtos = cardResponseDtoList;
     }

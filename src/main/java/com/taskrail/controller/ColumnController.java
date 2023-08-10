@@ -20,14 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ColumnController {
-    private final ColumnService columnService;
 
-    @GetMapping("/columns/{boardId}")
-    public ResponseEntity<List<ColumnResponseDto>> getColumns(@PathVariable Long boardId) {
-        Board board = columnService.findBoard(boardId);
-        List<ColumnResponseDto> columns = columnService.getBoardColumns(board);
-        return ResponseEntity.ok(columns);
-    }
+    private final ColumnService columnService;
 
     // 컬럼 생성
     @PostMapping("/columns")

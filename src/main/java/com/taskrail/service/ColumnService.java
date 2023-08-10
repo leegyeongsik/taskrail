@@ -29,19 +29,18 @@ public class ColumnService {
     public List<ColumnResponseDto> getBoardColumns(Board board) {
         List<ColumnResponseDto> columns = board.getColumns().stream()
                 .map(ColumnResponseDto::new)
-                .sorted(Comparator.comparing(ColumnResponseDto::getPos))
+                .sorted(Comparator.comparing(ColumnResponseDto::getPos)) // 컬럼 위치 순 정렬
                 .collect(Collectors.toList());
         return columns;
     }
 
     // 컬럼 생성
-    //@Transactional
     public ColumnResponseDto createColumn(User user, ColumnRequestDto columnRequestDto) {
 
         Board board = findBoard(columnRequestDto.getBoardId());
 
         //  보드에 초대된 유저인지 확인
-        if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
+        if (!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
@@ -62,7 +61,7 @@ public class ColumnService {
     public ColumnResponseDto updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
         Board board = findBoard(columnRequestDto.getBoardId());
 
-        if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
+        if (!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
@@ -73,7 +72,6 @@ public class ColumnService {
     }
 
     // 컬럼 삭제
-    //@Transactional
     public void deleteColumn(User user, Long id) {
         Columns column = findColumn(id);
         Long boardId = column.getBoard().getBoardId();
