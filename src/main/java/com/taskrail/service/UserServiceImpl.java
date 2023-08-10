@@ -49,6 +49,13 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserRequestDto requestDto, User user) {
         User updateUser = userRepository.findUserById(user.getId());
 
+        if(!updateUser.getGoogleId().isEmpty()){
+            throw new IllegalArgumentException("구글로 로그인한 사용자는 수정이 불가합니다.");
+        }
+        if(updateUser.getKakaoId() != null){
+            throw new IllegalArgumentException("카카오로 로그인한 사용자는 수정이 불가합니다.");
+        }
+
         if(!passwordEncoder.matches(requestDto.getPassword(),updateUser.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }

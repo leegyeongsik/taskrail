@@ -102,7 +102,7 @@ $(document).ready(function () {
       title: '로그인 요망',
       text: '로그인 후에 요청 부탁드립니다.',
     }).then(function () {
-      window.location.href = "/login";
+      window.location.href = "/view/login";
     })
   }
 });
@@ -152,7 +152,7 @@ function removeToken() {
     title: '로그인 요망',
     text: '인증이 만료되어 재로그인 부탁드립니다.',
   }).then(function () {
-    window.location.href = "/view/main";
+    window.location.href = "/view/login";
   })
 }
 
