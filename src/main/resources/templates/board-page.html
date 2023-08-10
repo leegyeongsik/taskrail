@@ -196,6 +196,7 @@
         });
     }
 
+    // 컬럼 수정한 이름 업데이트
     function updateColumnNameInDOM(columnId, newName) {
         const columnNameElement = document.querySelector(`#column-name-${columnId}`);
         if (columnNameElement) {
@@ -204,7 +205,7 @@
     }
 
 
-    // 새로운 칼럼을 DOM에 추가하는 함수
+    // 새로운 컬럼을 DOM에 추가하는 함수
     function addNewColumnToDOM(column) {
         const columnContainer = document.querySelector(".column-container");
         const newColumnDiv = document.createElement("div");
@@ -217,6 +218,21 @@
         <button class="edit-column-btn" id="${column.id}">Edit</button>
         <button class="delete-column-btn" id="delete-column-${column.id}">X</button>
     `;
+        newColumnDiv.appendChild(columnHeaderDiv);
+
+        // 이동 버튼 엘리먼트 추가
+        const moveButtonContainer = document.createElement("div");
+        moveButtonContainer.className = "move-button-container";
+        moveButtonContainer.innerHTML = `
+        <button class="move-column-left-btn" id="move-column-left-${column.id}">
+            ◀
+        </button>
+        <button class="move-column-right-btn" id="move-column-right-${column.id}">
+            ▶
+        </button>
+    `;
+        columnHeaderDiv.appendChild(moveButtonContainer);
+
         newColumnDiv.appendChild(columnHeaderDiv);
 
         // 카드 출력을 위한 카드 컨테이너 추가
@@ -254,6 +270,18 @@
         deleteColumnBtn.addEventListener("click", function () {
             const columnId = deleteColumnBtn.id.split("-")[2];
             deleteColumn(columnId);
+        });
+
+        const moveColumnLeftBtn = newColumnDiv.querySelector(".move-column-left-btn");
+        moveColumnLeftBtn.addEventListener("click", function () {
+            const columnId = moveColumnLeftBtn.id.split("-")[3];
+            moveColumnLeft(columnId);
+        });
+
+        const moveColumnRightBtn = newColumnDiv.querySelector(".move-column-right-btn");
+        moveColumnRightBtn.addEventListener("click", function () {
+            const columnId = moveColumnRightBtn.id.split("-")[3];
+            moveColumnRight(columnId);
         });
     }
 
