@@ -24,9 +24,13 @@ public class QCard extends EntityPathBase<Card> {
 
     public final QTimestamped _super = new QTimestamped(this);
 
+    public final ListPath<CardRole, QCardRole> cardRoleList = this.<CardRole, QCardRole>createList("cardRoleList", CardRole.class, QCardRole.class, PathInits.DIRECT2);
+
     public final StringPath color = createString("color");
 
     public final QColumns column;
+
+    public final ListPath<Comment, QComment> commentList = this.<Comment, QComment>createList("commentList", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 

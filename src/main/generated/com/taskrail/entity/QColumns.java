@@ -24,6 +24,8 @@ public class QColumns extends EntityPathBase<Columns> {
 
     public final QBoard board;
 
+    public final ListPath<Card, QCard> cards = this.<Card, QCard>createList("cards", Card.class, QCard.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
