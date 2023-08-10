@@ -157,8 +157,8 @@ body {
 }
 
 .btn {
-    background-color: var(--blue);
-    background-image: linear-gradient(70deg, var(--blue) 0%, var(--lightblue) 89%);
+    border: none;
+    background-color: var(--lightblue);
     border-radius: 12px;
     color: var(--white);
     cursor: pointer;
@@ -168,6 +168,7 @@ body {
     padding: 0.9rem 3rem;
     text-transform: uppercase;
     transition: transform 80ms ease-in;
+    WIDTH: 97%;
 }
 
 .form > .btn {
@@ -234,6 +235,7 @@ a.list-group-item .vs-title {
 }
 
 #login-kakao-btn {
+    border: none;
     border-radius: 12px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -241,7 +243,24 @@ a.list-group-item .vs-title {
     letter-spacing: 0.1rem;
     padding: 0.8rem 2.5rem;
     transition: transform 80ms ease-in;
-    background-color: #ffd43b;
-    color: #414141;
+    background-color: #fae100;
+    color: #371d1e;
+    WIDTH: 97%;
     margin-top: 20px;
+}
+
+#login-google-btn {
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    padding: 0.8rem 2.5rem;
+    transition: transform 80ms ease-in;
+    background-color: #4285F4;
+    color: #FFFFFF;
+    margin-top: 20px;
+    WIDTH: 97%;
+    text-transform: uppercase;
 }

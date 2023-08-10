@@ -6,15 +6,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class KakaoUserInfoDto {
+public class GoogleUserInfoDto {
 
-    private Long id;
-    private String name;
+    private String id;
     private String email;
 
-    public KakaoUserInfoDto(Long id, String emailId, String email){
+    public GoogleUserInfoDto(String id, String email){
         this.id = id;
-        this.name = emailId;
         this.email = email;
     }
 }

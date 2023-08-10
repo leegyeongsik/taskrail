@@ -26,7 +26,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String name; // 사용자 아이디
 
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -34,18 +33,28 @@ public class User {
 
     private Long kakaoId;
 
+    private String googleId;
+
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public User(String name, String email, String password, Long kakaoId) {
-        this.name = name;
+    public User(String emailID, String email, String password, Long kakaoId) {
+        this.name = emailID;
         this.email = email;
         this.password = password;
         this.kakaoId = kakaoId;
     }
+
+    public User(String emailID, String email, String password, String googleId) {
+        this.name = emailID;
+        this.email = email;
+        this.password = password;
+        this.googleId = googleId;
+    }
+
 
     public void update(String email, String password) {
         this.email = email;
@@ -54,6 +63,11 @@ public class User {
 
     public User kakaoIdUpdate(long kakaoId){
         this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public User googleIdUpdate(String googleId){
+        this.googleId = googleId;
         return this;
     }
 
