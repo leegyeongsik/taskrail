@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/2675/2675848.png"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <title>Board</title>
+    <style>
+        .column-container {
+            display: flex;
+            justify-content: space-between; /* 가로 정렬 및 컬럼 간 여백 추가 */
+        }
+
+        .column {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            width: calc(100% / 3);
+            background-color: #f7f7f7;
+        }
+
+        .column-header {
+            background-color: #f2f2f2;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 5px;
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+            padding: 5px 10px;
+        }
+
+        .add-card-button {
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-top: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .move-button-container {
+            display: flex; /* 버튼을 가로로 정렬 */
+            justify-content: flex-end; /* 버튼을 오른쪽 끝에 정렬 */
+             /* 버튼을 수직으로 중앙 정렬 */
+            height: 100%; /* 부모 요소인 .column-header의 높이와 동일하게 설정 */
+            padding-right: 5px; /* 오른쪽 여백 추가 */
+            align-items: flex-start;
+            margin-top: -25px; /
+        }
+
+        .move-column-left-btn,
+        .move-column-right-btn {
+            /*background-color: gray;*/
+            /*color: black;*/
+            /*border: none;*/
+            /*border-radius: 5px;*/
+            /*padding: 2px 5px;*/
+            /*cursor: pointer;*/
+            /*margin-left: 5px;*/
+
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${board.title}"></h1>
+
+<div class="column-container" data-board-id="${board.boardId}">
+    <div th:each="column : ${columns}" class="column" th:id="${'column-' + column.id}">
+        <div class="column-header">
+            <h3 th:id="${'column-name-' + column.id}" th:text="${column.name}"></h3>
+            <button class="edit-column-btn" th:id="${column.id}">Edit</button>
+            <button class="delete-column-btn" th:id="${'delete-column-' + column.id}">X</button>
+            <div class="move-button-container">
+                <button class="move-column-left-btn" th:id="${'move-column-left-' + column.id}">
+                    ◀
+                </button>
+                <button class="move-column-right-btn" th:id="${'move-column-right-' + column.id}">
+                    ▶
+                </button>
+            </div>
+        </div>
+        <div th:each="card : ${column.cards}" class="card">
+            <p th:text="${card.title}"></p>
+            <p th:text="${card.content}"></p>
+        </div>
+        <button class="add-card-button">+ Add Card</button>
+    </div>
+
+</div>
+<button id="addColumnBtn">+ Create Column</button>
+</body>
+<script th:inline="javascript">
+    var boardId = [[${board.boardId}]];
+
+    $(document).ready(function () {
+        // var boardContainer = $("#boardContainer");
+        // var boardId = boardContainer.data("board-id");
+
+        // 컬럼 이름 수정
+        $(".edit-column-btn").click(function () {
+            var columnId = $(this).attr("id");
+            console.log(columnId);
+            console.log(boardId);
+            editColumn(columnId);
+        });
+
+        // 컬럼 추가
+        $("#addColumnBtn").click(function () {
+            createColumn();
+        });
+
+        // 컬럼 삭제
+        $(".delete-column-btn").click(function () {
+            var columnId = $(this).attr("id").split("-")[2];
+            console.log(columnId);
+            deleteColumn(columnId);
+        });
+    });
+
+    // 컬럼 이름 수정
+    function editColumn(columnId) {
+        var newColumnName = prompt("Enter the new column name:");
+        var requestData = JSON.stringify({
+            name: newColumnName,
+            boardId: boardId
+        });
+
+        $.ajax({
+            type: "PUT",
+            url: `/api/columns/${columnId}`,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": Cookies.get('Authorization')
+            },
+            data: requestData,
+            success: function (data) {
+                alert("Column name updated successfully!");
+                updateColumnNameInDOM(columnId, data.name);
+            },
+            error: function () {
+                alert("Error updating column name");
+            }
+        });
+    }
+
+    // 컬럼 생성
+    function createColumn() {
+        var ColumnName = prompt("Enter the new column name:");
+        var requestData = JSON.stringify({
+            name: ColumnName,
+            boardId: boardId
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/api/columns",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": Cookies.get('Authorization')
+            },
+            data: requestData,
+            success: function (data) {
+                addNewColumnToDOM(data);
+            },
+            error: function () {
+                alert("Error creating column");
+            }
+        });
+    }
+
+    // 컬럼 삭제
+    function deleteColumn(columnId) {
+        $.ajax({
+            type: "DELETE",
+            url: `/api/columns/${columnId}`,
+            headers: {
+                "Authorization": Cookies.get('Authorization')
+            },
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert("Error deleting column");
+            }
+        });
+    }
+
+    function updateColumnNameInDOM(columnId, newName) {
+        const columnNameElement = document.querySelector(`#column-name-${columnId}`);
+        if (columnNameElement) {
+            columnNameElement.textContent = newName;
+        }
+    }
+
+
+    // 새로운 칼럼을 DOM에 추가하는 함수
+    function addNewColumnToDOM(column) {
+        const columnContainer = document.querySelector(".column-container");
+        const newColumnDiv = document.createElement("div");
+        newColumnDiv.className = "column";
+
+        const columnHeaderDiv = document.createElement("div");
+        columnHeaderDiv.className = "column-header";
+        columnHeaderDiv.innerHTML = `
+        <h3 id="column-name-${column.id}">${column.name}</h3>
+        <button class="edit-column-btn" id="${column.id}">Edit</button>
+        <button class="delete-column-btn" id="delete-column-${column.id}">X</button>
+    `;
+        newColumnDiv.appendChild(columnHeaderDiv);
+
+        // 카드 출력을 위한 카드 컨테이너 추가
+        const cardContainer = document.createElement("div");
+        cardContainer.className = "card-container";
+        newColumnDiv.appendChild(cardContainer);
+
+        // 각 카드 정보를 추가
+        column.cards.forEach(card => {
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "card";
+            cardDiv.innerHTML = `
+            <p>${card.title}</p>
+            <p>${card.content}</p>
+        `;
+            cardContainer.appendChild(cardDiv);
+        });
+
+        // 카드 추가 버튼
+        const addCardButton = document.createElement("button");
+        addCardButton.className = "add-card-button";
+        addCardButton.textContent = "+ Add Card";
+        newColumnDiv.appendChild(addCardButton);
+
+        columnContainer.appendChild(newColumnDiv);
+
+        // 새로운 컬럼에 이벤트 핸들러 등록
+        const editColumnBtn = newColumnDiv.querySelector(".edit-column-btn");
+        editColumnBtn.addEventListener("click", function () {
+            const columnId = editColumnBtn.id;
+            editColumn(columnId);
+        });
+
+        const deleteColumnBtn = newColumnDiv.querySelector(".delete-column-btn");
+        deleteColumnBtn.addEventListener("click", function () {
+            const columnId = deleteColumnBtn.id.split("-")[2];
+            deleteColumn(columnId);
+        });
+    }
+
+    // 컬럼 이동 버튼 클릭 이벤트 처리
+    $(".move-column-right-btn").click(function () {
+        var columnId = $(this).attr("id").split("-")[3];
+        moveColumnRight(columnId);
+    });
+
+    // 컬럼 오른쪽으로 이동
+    function moveColumnRight(columnId) {
+        $.ajax({
+            type: "PUT",
+            url: `/api/columns/${columnId}/right`,
+            headers: {
+                "Authorization": Cookies.get('Authorization')
+            },
+            success: function (data) {
+                alert(data); // 성공 메시지 표시
+                location.reload();
+            },
+            error: function () {
+                alert("Error moving column");
+            }
+        });
+    }
+
+    // 컬럼 왼쪽으로 이동 버튼
+    $(".move-column-left-btn").click(function () {
+        var columnId = $(this).attr("id").split("-")[3];
+        moveColumnLeft(columnId);
+    });
+
+    // 컬럼 왼쪽으로 이동
+    function moveColumnLeft(columnId) {
+        $.ajax({
+            type: "PUT",
+            url: `/api/columns/${columnId}/left`,
+            headers: {
+                "Authorization": Cookies.get('Authorization')
+            },
+            success: function (data) {
+                alert(data); // 성공 메시지 표시
+                location.reload();
+            },
+            error: function () {
+                alert("Error moving column");
+            }
+        });
+    }
+</script>
