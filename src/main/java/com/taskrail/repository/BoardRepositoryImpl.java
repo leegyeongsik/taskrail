@@ -1,6 +1,8 @@
 package com.taskrail.repository;
 
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.taskrail.entity.*;
@@ -45,12 +47,15 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
 
     @Override
     public List<User> getBoardUser(Long boardId) { // 해당보드에 초대되어있는 유저목록 반환
+        OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(Order.DESC, board.createdAt);
+
         return jpaQueryFactory.select(boardRole.user)
                 .from(boardRole)
                 .leftJoin(boardRole.board)
                 .where(
                         whoBoardUser(boardId)
                 )
+                .orderBy(orderSpecifier)
                 .fetch();
     }
     @Override
