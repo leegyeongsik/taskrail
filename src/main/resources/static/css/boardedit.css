@@ -1,0 +1,68 @@
+.container {
+  display: grid;
+  grid-template-columns: 300px 300px 300px 300px;
+  gap: 40px;
+  width: 1100px;
+  height: 800px;
+  left: 785px;
+  top: 102px;
+  position: absolute;
+}
+
+.container .item {
+  background-color: #fff;
+  border: 1px solid #fff;
+  aspect-ratio: 1;
+  border-radius: 10px;
+
+}
+
+.container .item .item_text {
+  margin-left: 20px;
+  display: inline;
+
+}
+
+.container .item .item_descripte {
+  margin-left: 23px;
+}
+
+.CreateNewBoard {
+  width: 300px;
+  height: 300px;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  text-align: center;
+  color: black;
+  font-size: 24px;
+  font-family: Poppins;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.container .item_edit {
+  margin-left: 23px;
+  margin-top: 130px;
+  font-size: 18px;
+
+}
+
+.container .item_delete {
+  margin-left: 265px;
+  display: inline;
+
+}
+
+.container .item_move {
+  margin-left: 265px;
+}
+.container .item_descripte .btns{
+  border: 0;
+  outline: 0;
+}
+.btnss{
+  border: 0;
+  outline: 0;
+
+}
