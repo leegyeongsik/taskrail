@@ -12,89 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <title>Document</title>
-    <style>
-        .container {
-            display: grid;
-            grid-template-columns: 300px 300px 300px 300px;
-            gap: 40px;
-            width: 1500px;
-            height: 650px;
-            left: 270px;
-            top: 102px;
-            position: absolute;
-        }
-
-        .container .item {
-            background-color: #fff;
-            border: 1px solid #fff;
-            aspect-ratio: 1;
-            border-radius: 10px;
-
-        }
-
-        .container .item .item_text {
-            margin-left: 20px;
-            display: inline;
-
-        }
-
-        .container .item .item_descripte {
-            margin-left: 23px;
-        }
-
-        .CreateNewBoard {
-            width: 103px;
-            height: 112px;
-            left: 100px;
-            top: 83px;
-            position: absolute;
-            text-align: center;
-            color: black;
-            font-size: 24px;
-            font-family: Poppins;
-            font-weight: 400;
-            word-wrap: break-word;
-        }
-
-        .container .item_edit {
-            margin-left: 23px;
-            margin-top: 130px;
-            font-size: 18px;
-
-        }
-
-        .container .item_delete {
-            margin-left: 265px;
-            display: inline;
-
-        }
-
-        .container .item_move {
-            margin-left: 265px;
-        }
-        .container .item_descripte .btns{
-            border: 0;
-            outline: 0;
-        }
-        .container .CreateNewBoard .btnss{
-            width: 130px;
-            height: 130px;
-            left: -15px;
-            top: 0px;
-            position: absolute;
-            text-align: center;
-            color: black;
-            font-size: 24px;
-            font-family: Poppins;
-            font-weight: 400;
-            word-wrap: break-word;
-            border: 0;
-            outline: 0;
-            background-color: transparent;
-
-        }
-    </style>
+    <link rel="stylesheet" href="/css/main-page.css">
+    <title>TaskRail</title>
 </head>
 
 <body>
@@ -186,13 +105,15 @@
                     var list=response
                     for (var i = 0; i < list.length; i++) {
                         var boards=`
-                            <div class="item" style="border: 1px solid ${list[i].color}; background-color:${list[i].color};" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-                            <h2 class="item_delete"><button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">X</button></h2>
-                            <h1 class="item_text">${list[i].title}</h1>
-                            <h4 class="item_descripte">
-                                ${list[i].description}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">→</h4></button>
-                            <h4 class="item_edit">
-                                <button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">edit</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+${list[i].boardCnt}</h4>
+                            <div class="item" data-board-id="${list[i].boardId}" style="border: 1px solid ${list[i].color}; background-color:${list[i].color};" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+                              <h2 class="item_delete"><button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">X</button></h2>
+                              <div class="items" data-board-id="${list[i].boardId}" style="height:65%;">
+                                <h1 class="item_text">${list[i].title}</h1>
+                                <h4 class="item_descripte">
+                                   ${list[i].description}</h4>
+                              </div>
+                              <h4 class="item_edit">
+                              <button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">edit</button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+${list[i].boardCnt}</h4>
                             </div>`
                         $('.container').append(boards);
                     }
@@ -230,16 +151,23 @@
 
             })
 
+/*
             $(document).on('click',"h4[class='item_descripte']" , function (e) { // 보드 이동
                 e.preventDefault();
                 var tagId = e.target.value
                 window.location.href = `/view/board-page/${tagId}`
             })
+*/
+
+            $(document).on('click',"div[class='items']" , function (e) { // 보드 상세 페이지 이동
+                e.preventDefault();
+                var tagId = $(this).data("board-id");
+                console.log(tagId);
+                window.location.href = `/view/board-page/${tagId}`;
+            })
 
             $(document).on('click',"div[class='CreateNewBoard']" , function (e) { // 보드생성
                 e.preventDefault();
-                var tagId = e.target.value
-                // console.log(tagId)
                 window.location.href = '/view/main/create';
             })
 
@@ -247,7 +175,6 @@
 
         function loginOrlogout(){
             let token = Cookies.get('Authorization');
-            console.log(token);
 
             if (token) { //  토큰이 있을 경우
                 // 1. 토큰 만료 여부 판단
