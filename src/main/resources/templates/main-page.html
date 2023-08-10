@@ -151,7 +151,7 @@
     <script>
         $(document).ready(function () {
             $.ajax({
-            url: `http://localhost:8080/api/boards`,
+            url: `/api/boards`,
             type: 'GET',
             contentType: 'application/json',
             headers: {
@@ -184,7 +184,7 @@
                 var tagId = e.target.value
                 // console.log(tagId)
                 $.ajax({
-                    url: `http://localhost:8080/api/boards/${tagId}`,
+                    url: `/api/boards/${tagId}`,
                     type: 'DELETE',
                     contentType: 'application/json',
                     headers: {
@@ -202,21 +202,21 @@
                 e.preventDefault();
                 var tagId = e.target.value
                 console.log(tagId)
-                window.location.href = `http://localhost:8080/view/main/${tagId}/edit`
+                window.location.href = `/view/main/${tagId}/edit`
 
             })
 
             $(document).on('click',"h4[class='item_descripte']" , function (e) { // 보드 이동
                 e.preventDefault();
                 var tagId = e.target.value
-                window.location.href = `http://localhost:8080/view/board-page/${tagId}`
+                window.location.href = `/view/board-page/${tagId}`
             })
 
             $(document).on('click',"div[class='CreateNewBoard']" , function (e) { // 보드생성
                 e.preventDefault();
                 var tagId = e.target.value
                 // console.log(tagId)
-                window.location.href = 'http://localhost:8080/view/main/create';
+                window.location.href = '/view/main/create';
             })
 
         })
