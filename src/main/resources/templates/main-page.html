@@ -152,7 +152,8 @@
     <!-- top  -->
 
     <div class="container">
-        <div class="item" style="border: 1px solid #000 ; background-color: #fff; border:2px dashed; padding:10px;">
+        <div class="items" style="border: 1px solid #000 ; background-color: #fff;
+        border:2px dashed; padding:10px; aspect-ratio: 1; border-radius: 10px;">
             <div class="CreateNewBoard"><button class="btnss" value="create">Create new board</button></div>
         </div>
     </div>
@@ -186,7 +187,7 @@
                     var list=response
                     for (var i = 0; i < list.length; i++) {
                         var boards=`
-                            <div class="item" style="border: 1px solid ${list[i].color}; background-color:${list[i].color};" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+                            <div class="item" data-board-id="${list[i].boardId}" style="border: 1px solid ${list[i].color}; background-color:${list[i].color};" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
                             <h2 class="item_delete"><button class="btns" value=${list[i].boardId} style="border: 1px solid ${list[i].color}; background-color:${list[i].color};">X</button></h2>
                             <h1 class="item_text">${list[i].title}</h1>
                             <h4 class="item_descripte">
@@ -236,10 +237,15 @@
                 window.location.href = `/view/board-page/${tagId}`
             })
 
+            $(document).on('click',"div[class='item']" , function (e) { // 보드 이동
+                e.preventDefault();
+                var tagId = $(this).data("board-id");
+                console.log(tagId);
+                window.location.href = `/view/board-page/${tagId}`;
+            })
+
             $(document).on('click',"div[class='CreateNewBoard']" , function (e) { // 보드생성
                 e.preventDefault();
-                var tagId = e.target.value
-                // console.log(tagId)
                 window.location.href = '/view/main/create';
             })
 
@@ -247,7 +253,6 @@
 
         function loginOrlogout(){
             let token = Cookies.get('Authorization');
-            console.log(token);
 
             if (token) { //  토큰이 있을 경우
                 // 1. 토큰 만료 여부 판단
