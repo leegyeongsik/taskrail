@@ -97,11 +97,30 @@ public class CardService {
                 () -> new IllegalArgumentException("카드가 없습니다.")
         );
 
+        int columnPos = card.getColumn().getPos();
+        Long boardId = card.getColumn().getBoard().getBoardId();
+
+        // 해당 카드가 속한 칼럼의 pos 가 2이상 이여야 함.
+        int prevColumnPos = (columnPos>1) ? columnPos-1 : 0;
+        if(prevColumnPos == 0){
+            throw new IllegalArgumentException("앞에 위치한 칼럼이 없습니다.");
+        }
+
+        Columns prevColumn = columnRepository.findByPosAndBoard_BoardId(prevColumnPos,boardId);
+        log.info("prevColumn: " + prevColumn.getName());
+
+        card.updatePrev(prevColumn);
+        log.info("update card Column: " + card.getColumn().getName());
+
+//      예성님께서 이전에 작성해놓으신 코드
+/*        Card card = cardRepository.findById(cardId).orElseThrow(
+            () -> new IllegalArgumentException("카드가 없습니다.")
+        );
         if(card.getColumn().getId() == 1){
             throw new IllegalArgumentException("앞으로 이동할 수 없습니다.");
         }
         Columns column = columnRepository.findById(card.getColumn().getId()-1).orElseThrow(
-                ()-> new IllegalArgumentException("앞으로 이동할 수 없습니다.")
+            ()-> new IllegalArgumentException("앞으로 이동할 수 없습니다.")
         );
         //jpa sql 직접 사용해보기, 어노테이션 query
         // update
@@ -109,12 +128,37 @@ public class CardService {
         // where cardId = cardId
 
 
-        card.updatePrev(column);
+        card.updatePrev(column);*/
     }
 
     @Transactional
     public void updateNextCard(Long cardId) {
         Card card = cardRepository.findById(cardId).orElseThrow(
+            () -> new IllegalArgumentException("카드가 없습니다.")
+        );
+
+        int columnPos = card.getColumn().getPos();
+        Long boardId = card.getColumn().getBoard().getBoardId();
+
+        // 해당 카드가 속한 보드의 칼럼 중 Pos 가 가장 높은 값 가져오기
+        int largestPos = columnRepository.findItemWithLargestPos(boardId);
+
+        // 가장 큰 pos 칼럼에 속한 카드이거나, 그것보다 더높은 pos 의 칼럼에 속할 경우(이경우는 데이터가 잘못된 경우임)
+        int nextColumnPos = (largestPos>=columnPos) ? columnPos+1 : -1;
+
+        if(nextColumnPos == -1){
+            throw new IllegalArgumentException("뒤에 위치한 칼럼이 없습니다.");
+        }
+
+        Columns nextColumn = columnRepository.findByPosAndBoard_BoardId(nextColumnPos,boardId);
+        log.info("nextColumn: " + nextColumn.getName());
+
+        card.updateNext(nextColumn);
+        log.info("update card Column: " + card.getColumn().getName());
+
+
+//      예성님께서 이전에 작성해놓으신 코드
+/*        Card card = cardRepository.findById(cardId).orElseThrow(
                 () -> new IllegalArgumentException("카드가 없습니다.")
         );
         List<Card> cards = cardRepository.findAll();
@@ -127,7 +171,7 @@ public class CardService {
         Columns column = columnRepository.findById(card.getColumn().getId()+1).orElseThrow(
                 ()-> new IllegalArgumentException("뒤로 이동할 수 없습니다.")
         );
-        card.updateNext(column);
+        card.updateNext(column);*/
     }
 
     @Transactional

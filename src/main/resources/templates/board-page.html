@@ -84,9 +84,19 @@
                 </button>
             </div>
         </div>
-        <div th:each="card : ${column.cards}" class="card">
+        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}">
+            <div class="cards" th:id="${card.id}">
             <p th:text="${card.title}"></p>
             <p th:text="${card.content}"></p>
+            </div>
+            <div class="move-button-container">
+                <button class="move-card-left-btn" th:id="${column.id + '-move-card-left-' + card.id}">
+                    ◀
+                </button>
+                <button class="move-card-right-btn" th:id="${column.id + '-move-card-right-' + card.id}">
+                    ▶
+                </button>
+            </div>
         </div>
         <button class="add-card-button">+ Add Card</button>
     </div>
@@ -200,7 +210,7 @@
 
     // 컬럼 오른쪽 이동 버튼 클릭 이벤트 처리
     $(".move-column-right-btn").click(function () {
-        var columnId = $(this).attr("id").split("-")[3];
+        const columnId = $(this).attr("id").split("-")[3];
         moveColumnRight(columnId);
     });
 
@@ -245,4 +255,67 @@
             }
         });
     }
+
+
+
+
+
+    // 카드 클릭시 상세 페이지 로드
+    $(".cards").click(function () {
+        const cardId = $(this).attr("id");
+        window.location.href = `/view/cards/${cardId}`
+    });
+
+
+    // 카드 오른쪽 이동 버튼 클릭 이벤트 처리
+    $(".move-card-right-btn").click(function () {
+        const cardId = $(this).attr("id").split("-")[4];
+        moveCardRight(cardId);
+    });
+
+    // 카드 오른쪽으로 이동
+    function moveCardRight(cardId) {
+        $.ajax({
+            type: "PUT",
+            url: `/api/cards/${cardId}/next`,
+            headers: {
+                "Authorization": Cookies.get('Authorization')
+            },
+            success: function (data) {
+                console.log(data.toString());
+                alert("이동 성공!"); // 성공 메시지 표시
+                location.reload();
+            },
+            error: function () {
+                alert("Error moving card");
+            }
+        });
+    }
+
+    // 카드 왼쪽으로 이동 버튼
+    $(".move-card-left-btn").click(function () {
+        const cardId = $(this).attr("id").split("-")[4];
+        moveCardLeft(cardId);
+    });
+
+    // 카드 왼쪽으로 이동
+    function moveCardLeft(cardId) {
+        $.ajax({
+            type: "PUT",
+            url: `/api/cards/${cardId}/prev`,
+            headers: {
+                "Authorization": Cookies.get('Authorization')
+            },
+            success: function (data) {
+                alert("이동 성공!"); // 성공 메시지 표시
+                location.reload();
+            },
+            error: function () {
+                alert("Error moving card");
+            }
+        });
+    }
+
+
+
 </script>
