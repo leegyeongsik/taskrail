@@ -57,6 +57,8 @@
         <div class="column-header">
             <h3 th:id="${'column-name-' + column.id}" th:text="${column.name}"></h3>
             <button class="edit-column-btn" th:id="${column.id}">Edit</button>
+            <button class="delete-column-btn" id="delete-column-${column.id}">X</button>
+        </div>
         </div>
         <div th:each="card : ${column.cards}" class="card">
             <p th:text="${card.title}"></p>
@@ -64,13 +66,16 @@
         </div>
         <button class="add-card-button">+ Add Card</button>
     </div>
+
 </div>
+<button id="addColumnBtn">+ Create Column</button>
 </body>
 <script th:inline="javascript">
 
     var boardId = [[${board.boardId}]];
 
     document.addEventListener("DOMContentLoaded", function () {
+        // 컬럼 이름 수정
         const editButtons = document.querySelectorAll(".edit-column-btn");
         editButtons.forEach(button => {
             button.addEventListener("click", function () {
@@ -82,8 +87,26 @@
                 editColumn(columnId);
             });
         });
+
+        // 컬럼 추가
+        const addColumnBtn = document.getElementById("addColumnBtn");
+        addColumnBtn.addEventListener("click", function () {
+            createColumn();
+        });
+
+
+        // 컬럼 삭제
+        const deleteButtons = document.querySelectorAll(".delete-column-btn");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const columnId = button.id.split("-")[2]; // 버튼 ID에서 컬럼 ID 추출
+                deleteColumn(columnId);
+            });
+        });
     });
 
+
+    // 컬럼 이름 수정
     function editColumn(columnId) {
         // AJAX 요청 보내기
         const xhr = new XMLHttpRequest();
@@ -120,6 +143,56 @@
             columnNameElement.textContent = newName;
         }
     }
+
+
+    // 컬럼 생성
+    function createColumn() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/columns", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization", Cookies.get('Authorization'))
+
+        const ColumnName = prompt("Enter the new column name:");
+        const requestData = JSON.stringify({
+            name: ColumnName,
+            boardId: boardId
+        });
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 201) { // HTTP 상태 코드 201은 Created를 의미합니다.
+                    const newColumn = JSON.parse(xhr.responseText); // 생성된 컬럼 정보를 JSON 형태로 파싱
+                    addNewColumnToDOM(newColumn); // 새로운 컬럼을 화면에 추가
+                } else {
+                    alert("Error creating column");
+                }
+            }
+        };
+
+        xhr.send(requestData);
+    }
+
+    function addNewColumnToDOM(column) {
+        const columnContainer = document.querySelector(".column-container");
+        const newColumnDiv = document.createElement("div");
+        newColumnDiv.className = "column";
+        newColumnDiv.innerHTML = `
+        <div class="column-header">
+            <h3 id="column-name-${column.id}"">${column.name}</h3>
+            <button class="edit-column-btn" id="${column.id}">Edit</button>
+        </div>
+        <button class="add-card-button">+ Add Card</button>
+    `;
+
+        columnContainer.appendChild(newColumnDiv);
+        // 이후 필요한 추가 작업을 수행할 수 있습니다.
+    }
+
+    // 컬럼 삭제
+
+
+
+
 
 
 
