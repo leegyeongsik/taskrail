@@ -30,7 +30,7 @@ public class BoardViewController {
         List<ColumnResponseDto> columns = columnService.getBoardColumns(board);
         model.addAttribute("board", board);
         model.addAttribute("columns", columns);
-        return "board";
+        return "board-page";
     }
 
     @GetMapping("/main/create")
