@@ -73,7 +73,8 @@
                                     <h4 class="h4 fw-bold">카드 수정화면</h4>
                                     <div>
                                         <h5 class="h5">만료기한 : </h5>
-                                        <input type="text" class="h4" id="card_due_date" name="card_due_date" value="${due_date}">
+                                        <input type="date" id="selectedDate" name="selectedDate"> &nbsp;
+                                        <input type="time" id="selectedTime">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
@@ -138,12 +139,14 @@
         function updateCard(cardId){
             let title = document.getElementById('card_title').value;
             let content = document.getElementById('card_content').value;
-            let due_date = document.getElementById('card_due_date').value;
             let color = document.getElementById('color-picker').value;
+            let selectedDate = document.getElementById("selectedDate").value;
+            const selectedTime = document.getElementById("selectedTime").value;
+            selectedDate = selectedDate + "T" + selectedTime + ":00";
             let updatedData = {
                 title: title,
                 content: content,
-                due_date: due_date,
+                due_date: selectedDate,
                 color : color
             };
 
