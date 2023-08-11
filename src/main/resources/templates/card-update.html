@@ -177,11 +177,9 @@
                 .then(function (response) {
                     if (response.ok) {
                         successMsg('카드 수정 성공');
-                        history.back();
                     } else {
-                        errorMsg('카드 수정 실패 : 작성자가 아닙니다.');
+                        errorMsg('카드 수정 실패');
                         //console.log('카드 수정 실패 시 작성자가 아니여서일 확룍 다분')
-                        window.location.reload();
                     }
                     return response; // 이 부분을 추가합니다.
                 })
@@ -195,6 +193,8 @@
             Toast.fire({
                 icon: 'success',
                 title: msg
+            }).then(function () {
+                window.history.back();
             })
         }
 
@@ -202,6 +202,8 @@
             Toast.fire({
                 icon: 'error',
                 title: msg
+            }).then(function () {
+                window.location.reload();
             })
         }
 
