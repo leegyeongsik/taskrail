@@ -21,52 +21,9 @@
           integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
           crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
+
   <script>
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'center-center',
-      showConfirmButton: false,
-      timer: 600,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-      }
-    })
-    let jwtCookie_temp = getCookieValueByName('Authorization');
-    let jwtCookie = removeBearerPrefix(jwtCookie_temp);
-
-    $(document).ready(function () {
-      // 컬럼 이름 수정
-      $(".edit-column-btn").click(function () {
-        var columnId = $(this).attr("id");
-        console.log(columnId);
-        console.log(boardId);
-        editColumn(columnId);
-      });
-    });
-    function getCookieValueByName(name) {
-      let cookie = document.cookie;
-      let cookiePairs = cookie.split(';');
-
-      for (let i = 0; i < cookiePairs.length; i++) {
-
-        let pair = cookiePairs[i].trim();
-        if (pair.startsWith(name + '=')) {
-          return pair.substring(name.length + 1);
-        }
-      }
-      return null;
-    }
-
-    function removeBearerPrefix(jwtCookie) {
-      const prefix = "Bearer%20";
-      if (jwtCookie.startsWith(prefix)) {
-        return jwtCookie.substring(prefix.length);
-      }
-      return jwtCookie;
-    }
-
+    // js 파일로 분리하게 되면 아래 오류나서 html 에 작성.
     let cardId = [[${cardId}]];
     let boardId = [[${boardId}]];
     window.onload = function () {
@@ -412,6 +369,7 @@
     }
 
   </script>
+
 </head>
 <body>
 
@@ -419,4 +377,5 @@
 </div>
 
 </body>
+<script type="application/javascript" src="/js/card-detail.js"></script>
 </html>

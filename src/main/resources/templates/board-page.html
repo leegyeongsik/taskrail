@@ -8,249 +8,17 @@
 
     <link rel="stylesheet" href="/css/board-page.css">
     <title>Board</title>
-    <style>
-        .column-container {
-            display: flex;
-            justify-content: space-between; /* 가로 정렬 및 컬럼 간 여백 추가 */
-        }
-
-        .column {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px;
-            width: calc(100% / 3);
-            background-color: #f7f7f7;
-        }
-
-        .column-header {
-            background-color: #f2f2f2;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            padding: 5px;
-        }
-
-        .card {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 5px 0;
-            padding: 5px 10px;
-        }
-
-        .add-card-button {
-            background-color: black;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            margin-top: 5px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-        }
-
-        .move-button-container {
-            display: flex; /* 버튼을 가로로 정렬 */
-            justify-content: flex-end; /* 버튼을 오른쪽 끝에 정렬 */
-            /* 버튼을 수직으로 중앙 정렬 */
-            height: 100%; /* 부모 요소인 .column-header의 높이와 동일하게 설정 */
-            padding-right: 5px; /* 오른쪽 여백 추가 */
-            align-items: flex-start;
-            margin-top: -25px;
-        }
-
-        .move-column-left-btn,
-        .move-column-right-btn {
-            border: none;
-        }
-
-
-        /*서치바*/
-        body, button, input {
-            /*font: 1em Hind, sans-serif;*/
-            /*line-height: 1.5em;*/
-        }
-        body, input {
-            color: #171717;
-        }
-        .search-bar {
-            display: flex;
-        }
-
-        .search-bar input,
-        .search-btn,
-        .search-btn:before,
-        .search-btn:after {
-            transition: all 0.25s ease-out;
-        }
-        .search-bar input,
-        .search-btn {
-            width: 3em;
-            height: 3em;
-        }
-        .search-bar input:invalid:not(:focus),
-        .search-btn {
-            cursor: pointer;
-        }
-        .search-bar,
-        .search-bar input:focus,
-        .search-bar input:valid  {
-            width: 100%;
-        }
-        .search-bar input:focus,
-        .search-bar input:not(:focus) + .search-btn:focus {
-            outline: transparent;
-        }
-        .search-bar {
-            margin-left: 1400px;
-            padding: 1.5em;
-            justify-content: right;
-            max-width: 10em;
-        }
-        .search-bar input {
-            background: transparent;
-            border-radius: 1.5em;
-            box-shadow: 0 0 0 0.4em #171717 inset;
-            padding: 0.75em;
-            transform: translate(0.5em,0.5em) scale(0.5);
-            transform-origin: 100% 0;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-        .search-bar input::-webkit-search-decoration {
-            -webkit-appearance: none;
-        }
-        .search-bar input:focus,
-        .search-bar input:valid {
-            background: #fff;
-            border-radius: 0.375em 0 0 0.375em;
-            box-shadow: 0 0 0 0.1em #d9d9d9 inset;
-            transform: scale(1);
-        }
-        .search-btn {
-            background: #171717;
-            border-radius: 0 0.75em 0.75em 0 / 0 1.5em 1.5em 0;
-            padding: 0.75em;
-            position: relative;
-            transform: translate(0.25em,0.25em) rotate(45deg) scale(0.25,0.125);
-            transform-origin: 0 50%;
-        }
-        .search-btn:before,
-        .search-btn:after {
-            content: "";
-            display: block;
-            opacity: 0;
-            position: absolute;
-        }
-        .search-btn:before {
-            border-radius: 50%;
-            box-shadow: 0 0 0 0.2em #f1f1f1 inset;
-            top: 0.75em;
-            left: 0.75em;
-            width: 1.2em;
-            height: 1.2em;
-        }
-        .search-btn:after {
-            background: #f1f1f1;
-            border-radius: 0 0.25em 0.25em 0;
-            top: 51%;
-            left: 51%;
-            width: 1em;
-            height: 0.25em;
-            transform: translate(0.2em,0) rotate(45deg);
-            transform-origin: 0 50%;
-        }
-        .search-btn span {
-            display: inline-block;
-            overflow: hidden;
-            width: 1px;
-            height: 1px;
-        }
-
-        /* Active state */
-        .search-bar input:focus + .search-btn,
-        .search-bar input:valid + .search-btn {
-            background: #2762f3;
-            border-radius: 0 0.375em 0.375em 0;
-            transform: scale(1);
-        }
-        .search-bar input:focus + .search-btn:before,
-        .search-bar input:focus + .search-btn:after,
-        .search-bar input:valid + .search-btn:before,
-        .search-bar input:valid + .search-btn:after {
-            opacity: 1;
-        }
-        .search-bar input:focus + .search-btn:hover,
-        .search-bar input:valid + .search-btn:hover,
-        .search-bar input:valid:not(:focus) + .search-btn:focus {
-            background: #0c48db;
-        }
-        .search-bar input:focus + .search-btn:active,
-        .search-bar input:valid + .search-btn:active {
-            transform: translateY(1px);
-        }
-
-        @media screen and (prefers-color-scheme: dark) {
-            body, input {
-                color: #f1f1f1;
-            }
-            .column-container {
-                color: #171717;
-            }
-            body {
-                background: #171717;
-            }
-            .search-bar input {
-                box-shadow: 0 0 0 0.4em #f1f1f1 inset;
-            }
-            .search-bar input:focus,
-            .search-bar input:valid {
-                background: #3d3d3d;
-                box-shadow: 0 0 0 0.1em #3d3d3d inset;
-            }
-            .search-btn {
-                background: #f1f1f1;
-            }
-        }
-
-
-        /*?*/
-        a, a:hover, a:visited{color:#fff; text-decoration:none;}
-
-        #pop{
-            width: 316px;
-            height: 500px;
-            background: #FFFFFF;
-            color: #fff;
-            position: absolute;
-            top: 174.4px;
-            left: 1457px;
-            text-align: center;
-            border: 1px solid #000;
-            border-radius: 5px;        }
-        #close{
-            width:100px; margin:auto; cursor:pointer; font-weight:bold; color: #171717;
-        }
-        #submit{
-            width:100px; margin:auto; cursor:pointer; font-weight:bold; color: #171717;
-        }
-
-        .listBox {
-            max-width: 500px;
-        }
-
-        .listInner {
-            background-color: #dedede;
-            margin: 5px 5px;
-            padding: 4px;
-        }
-    </style>
 </head>
 <body>
-<h1 th:text="${board.title}">
+<h1 style="
+    text-align: center;
+    font-size: 3em;
+" th:text="${board.title}">
 </h1>
+<h2 style="
+    margin-left: 1.2%;
+    padding: 1.1em 1.1em 0em;
+">보드 권한 설정 검색</h2>
 <h1>
     <div class = "search-bar" >
         <input type="search" value="" name="search" id="btn_toggless" pattern=".*\S.*" required>
@@ -264,7 +32,7 @@
     <div id="pop"
          style="display:none; overflow: auto;">
         <div style="height:370px; left: 150px">
-            <div class="listBox" style="font-size: 15px; color:#171717;">
+            <div class="listBox" style="font-size: 20px; color:#171717; padding: 3%;">
                 selected: <input type="text" id="title_text" style="font-size: 15px; color:#171717;"><br>
             </div>
         </div>
@@ -286,10 +54,11 @@
                 </button>
             </div>
         </div>
-        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}">
+        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}"
+             th:style="'background-color: ' + ${card.color}">
             <div class="cards" th:id="${card.id}">
-                <p th:text="${card.title}"></p>
-                <p th:text="${card.content}"></p>
+                <p class="card-text" th:text="${card.title}"></p>
+                <p class="card-text" th:text="${card.content}"></p>
             </div>
             <div class="move-button-container">
                 <button class="move-card-left-btn" th:id="${column.id + '-move-card-left-' + card.id}">
@@ -311,7 +80,7 @@
         toast: true,
         position: 'center-center',
         showConfirmButton: false,
-        timer: 2000,
+        timer: 600,
         timerProgressBar: true,
         didOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -573,7 +342,7 @@
                         $('#pop').empty();
                         var boardaaa =
                             `<div style = "height:370px; left: 150px" >
-                            <div class = "listBox" style = "font-size: 15px; color:#171717;" >
+                            <div class = "listBox" style = "font-size: 20px; color:#171717; padding: 3%;" >
                             selected:<input type="text" id="title_text"  value=""style="font-size: 15px; color:#171717;"><br>
                             </div>
                         </div>`
@@ -581,7 +350,7 @@
 
                         for (let i = 0; i < response.length; i++) {
                             if (response[i].isin == true){
-                                var isin = "o";
+                                var isin = "Member";
                                 var boards=`
                                     <div class="listInner">
                                         <span class="country" style="font-size: 20px">${response[i].name}</span>
@@ -590,21 +359,21 @@
                                 $('.listBox').append(boards);
 
                             } else {
-                                var isin = "x";
+                                var isin = "Not Member";
                                 var boards=`
                                     <div class="listInner">
                                         <span class="country" style="font-size: 20px">${response[i].name}</span>
-                    a                    <span class="exist" style="font-size: 20px">| ${isin}</span>
+                                        <span class="exist" style="font-size: 20px">| ${isin}</span>
                                         <span class="add" style="font-size: 20px">
-                                        <button class="btns" id =${response[i].userId} value=${response[i].name} style="border: 1px solid #FFFFFF; background-color:#FFFFFF;">| Add</button></span>
+                                        <button class="btns" id =${response[i].userId} value=${response[i].name} style="border: 1px solid #FFFFFF; background-color:#FFFFFF;"> 선택</button></span>
                                     </div>`
                                 $('.listBox').append(boards);
                             }
                         }
                     }
                     var boardss=`
-                    <div id="submit">Add</div>
-                    <div id="close">close</div>`
+                    <div id="submit">권한설정</div>
+                    <div id="close">닫기</div>`
                     $('.listBox').append(boardss);
                     $('#close').click(function() {
                         $('#pop').hide();
@@ -617,6 +386,7 @@
             e.preventDefault();
             var tagIds = e.target.id
             var tagId = e.target.value
+            e.target.display = "none";
 
             list.push(tagIds)
             if (temp_selected1 != null){
@@ -664,6 +434,6 @@
             })
         }})
 
-
-
 </script>
+
+</html>

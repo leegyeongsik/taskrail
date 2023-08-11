@@ -58,5 +58,14 @@ public class ColumnController {
         return ResponseEntity.ok("컬럼을 왼쪽으로 이동했습니다.");
     }
 
+    // 드래그 앤 드롭으로 이동
+    @PutMapping("/columns/{columnId}/move")
+    public ResponseEntity<String> moveColumn(
+            @PathVariable Long columnId,
+            @RequestParam int newPosition
+    ) {
+        columnService.dragColumn(columnId, newPosition);
+        return ResponseEntity.ok("Column moved successfully");
+    }
 
 }
