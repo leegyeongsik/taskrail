@@ -106,8 +106,8 @@
                                 <div class="mt-5">
                                     <h5 class="h5">댓글</h5>
                                     <label for="comment-input"></label>
-                                    <textarea class="comment-input form-control col-sm-5" id="comment-input" rows="5" placeholder="댓글을 입력하세요"></textarea>
-                                    <button class="btn btn-dark mt-3">작성</button>
+                                    <textarea class="comment-input form-control col-sm-5 mb-3" id="comment-input" rows="5" placeholder="댓글을 입력하세요"></textarea>
+                                    <button class="btn btn-dark mt-3" onclick="createComments(cardId)">작성</button>
                                     <div class="commentList-box mt-5">
 `;
                     let comment_html = '';
@@ -119,12 +119,14 @@
                                         <div class="d-flex justify-content-between">
                                             <span>${comment_username}</span>
                                             <div>
-                                                <button class="btn btn-dark">수정</button>
-                                                <button class="btn btn-outline-dark">삭제</button>
+                                                <button class="btn btn-dark" onclick="toggleUpdateComment('comment-content-${commentList[j].id}','comment-input-${commentList[j].id}','comment-update-btn-${commentList[j].id}')" value="${commentList[j].id}">수정</button>
+                                                <button class="btn btn-outline-dark" onclick="deleteComments(this)" value="${commentList[j].id}">삭제</button>
+                                                <button class="btn btn-dark me-2" style="display: none" id="comment-update-btn-${commentList[j].id}" onclick="updateComments('comment-input-${commentList[j].id}',this)" value="${commentList[j].id}">완료</button>
                                             </div>
                                         </div>
-                                        <div class="mt-2" style="height: 100px">
-                                            <p class="m-3">${comment_content}</p>
+                                        <div class="my-2" style="height: 100px">
+                                            <p class="m-3" id="comment-content-${commentList[j].id}">${comment_content}</p>
+                                            <textarea class="form-control" rows="3" id="comment-input-${commentList[j].id}" style="display: none">${commentList[j].content}</textarea>
                                         </div>
                     `;
                         comment_html += temp_html4;
@@ -138,6 +140,102 @@
                     `
                     let box_html = `${temp_html}${user_role_html}${temp_html3}${comment_html}${temp_html5}`;
                     $('.container').append(box_html);
+                })
+                .catch(error => {
+                    // 오류 처리 로직을 작성합니다.
+                    console.error(error);
+                });
+        }
+
+        let state = true
+        function toggleUpdateComment(prevElementId,nextElementId,completeBtn){
+            console.log(prevElementId,nextElementId,completeBtn)
+
+            let prev = document.getElementById(prevElementId);
+            let next = document.getElementById(nextElementId);
+            let btn = document.getElementById(completeBtn);
+
+            if(state){
+                prev.style.display = 'none';
+                next.style.display = 'inline';
+                btn.style.display = 'inline';
+                state = false
+            }else{
+                prev.style.display = 'inline';
+                next.style.display = 'none';
+                btn.style.display = 'none';
+                state = true
+            }
+        }
+        function createComments(cardId){
+            let url = '/api/cards/'+cardId+'/comments';
+            let bodyContent = document.getElementById('comment-input').value;
+            let formData = {
+                body : bodyContent
+            }
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.msg);
+                    //window.location.reload()
+                })
+                .catch(error => {
+                    console.error("댓글 작성 실패:", error);
+                });
+
+        }
+        function deleteComments(element){
+
+            let commentId = element.getAttribute('value');
+            let url = '/api/comments/'+commentId
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`
+                },
+            })
+                .then(response => {
+                    return response.json(); // JSON 형태의 응답 데이터 파싱
+                })
+                .then(data => {
+                    alert(data.msg);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    // 오류 처리 로직을 작성합니다.
+                    console.error(error);
+                });
+        }
+        function updateComments(nextElementId,element){
+            let nextValue = document.getElementById(nextElementId).value
+            let commentId = element.getAttribute('value');
+
+            let formData ={
+                content : nextValue
+            }
+            fetch('/api/comments/'+commentId, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify(formData)
+            })
+                .then(response => {
+                    return response.json(); // JSON 형태의 응답 데이터 파싱
+                })
+                .then(data => {
+                    alert(data.msg);
+                    window.location.reload();
                 })
                 .catch(error => {
                     // 오류 처리 로직을 작성합니다.
