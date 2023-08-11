@@ -142,8 +142,10 @@
             var confirmDelete = confirm("컬럼을 삭제하시겠습니까?");
             if(confirmDelete) {
                 deleteColumn(columnId);
-            }
+            } // 컬럼 삭제 여부 확인
+
             console.log(columnId);
+
         });
 
         // 카드 추가
@@ -188,6 +190,11 @@
     // 컬럼 생성
     function createColumn() {
         var ColumnName = prompt("Enter the new column name:");
+
+        if (ColumnName === null) {
+            return; // 사용자가 취소를 눌렀을 경우 함수 종료
+        }
+
         var requestData = JSON.stringify({
             name: ColumnName,
             boardId: boardId
