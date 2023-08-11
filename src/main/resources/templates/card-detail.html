@@ -156,42 +156,39 @@
         console.error(error);
       });
     }
-    function requestData() {
-      var checkboxes = document.querySelectorAll("input[name='items']:checked");
-      var selectedUserIds = [];
-      console.log("checkboxes .length : "+checkboxes.length);
 
-      checkboxes.forEach(checkbox => {
-        var user_id = checkbox.value;
-        selectedUserIds.push(user_id);
-        console.log("user_id : "+user_id);
-      });
-      var requestData = {
-        user_id: selectedUserIds
-      };
+    function requestDatas (selectedUserIds) {
+      console.log("호출됨");
+        var requestData = {
+          user_id: selectedUserIds
+        };
 
-      var url = '/api/cards/' + cardId;
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${jwtCookie}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-      })
-              .then(response => {
-                if (response.status === 400) {
-                  alert('요청이 실패했습니다.');
-                  window.close(); // 팝업 창 닫기
-                } else if (response.status === 201) {
-                  alert('할당이 완료되었습니다.');
-                  window.close(); // 팝업 창 닫기
-                }
-              })
-              .catch(error => {
-                console.error(error);
-              });
-    }
+        var url = '/api/cards/' + cardId;
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${jwtCookie}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestData)
+        })
+                .then(response => {
+                  if (response.status === 400) {
+                    alert('요청이 실패했습니다.');
+                    window.close(); // 팝업 창 닫기
+                    window.location.reload();
+                  } else if (response.ok) {
+                    alert('할당이 완료되었습니다.');
+                    window.close(); // 팝업 창 닫기
+                    window.location.reload();
+                  }
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+      }
+
+
     function addUser() {
       var popupWidth = 400;
       var popupHeight = 300;
@@ -214,7 +211,7 @@
                   return response.json(); // JSON 형태의 응답 데이터 파싱
                 })
                 .then(data => {
-                  window.selectedUserIds = [];
+
                   // 팝업 창 열기
                   var popup = window.open("", "작업자 할당 하기", "width=" + popupWidth + ", height=" + popupHeight + ", left=" + popupLeft + ", top=" + popupTop);
 
@@ -226,11 +223,34 @@
 
                   for (let i = 0; i < data.length; i++) {
                     let username = data[i].name;
-                    let userId= data[i].id;
+                    let userId= data[i].userId;
 
                     popup.document.write(`<input type='checkbox' name='items' value='${userId}'>${username}<br>`);
+
                   }
-                  popup.document.write(`<button type='button' onclick="window.opener.requestData()">할당하기</button>`);
+                  popup.document.write("<button type='button' onclick='assignUsers()'>할당하기</button>");
+
+                  let selectedUserIds = [];
+
+                  popup.assignUsers = function () {
+                    var checkboxes = popup.document.querySelectorAll("input[name='items']:checked");
+
+                    checkboxes.forEach(checkbox => {
+                      var user_id = checkbox.value;
+                      selectedUserIds.push(user_id);
+                    });
+
+                    if (selectedUserIds.length > 0) {
+                      // 선택된 작업자 데이터를 부모 창의 requestData 함수로 전달
+
+                      requestDatas(selectedUserIds);
+                      popup.close(); // 팝업 창 닫기
+                    } else {
+                      alert("작업자를 선택해주세요.");
+                    }
+                  };
+
+
                   popup.document.write("</form>");
                   popup.document.write("</body></html>");
 
