@@ -54,8 +54,9 @@
                 </button>
             </div>
         </div>
-        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}">
-            <div class="cards" th:id="${card.id}" th:style="'background-color: ' + ${card.color}">
+        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}"
+             th:style="'background-color: ' + ${card.color}">
+            <div class="cards" th:id="${card.id}">
                 <p class="card-text" th:text="${card.title}"></p>
                 <p class="card-text" th:text="${card.content}"></p>
             </div>
@@ -432,6 +433,6 @@
             })
         }})
 
-
-
 </script>
+
+</html>
