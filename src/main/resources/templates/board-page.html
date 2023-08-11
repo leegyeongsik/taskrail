@@ -196,6 +196,9 @@
             body, input {
                 color: #f1f1f1;
             }
+            .column-container {
+                color: #171717;
+            }
             body {
                 background: #171717;
             }
@@ -495,7 +498,8 @@
         // 카드 클릭시 상세 페이지 로드
         $(".cards").click(function () {
             const cardId = $(this).attr("id");
-            window.location.href = `/view/cards/${cardId}`
+
+            window.location.href = `/view/boards/${boardId}/cards/${cardId}`
         });
 
 
