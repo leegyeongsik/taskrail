@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/view")
 public class CardViewController {
 
+    @GetMapping("/{columnId}/cards")
+    public String createCard(){
+        return "card-create";
+    }
+
     @GetMapping("/cards/{cardId}")
     public String getCardOne(@PathVariable String cardId, Model model){
 
