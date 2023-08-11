@@ -23,6 +23,29 @@
   <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
 
   <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'center-center',
+      showConfirmButton: false,
+      timer: 600,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+
+
+    $(document).ready(function () {
+      // 컬럼 이름 수정
+      $(".edit-column-btn").click(function () {
+        var columnId = $(this).attr("id");
+        console.log(columnId);
+        console.log(boardId);
+        editColumn(columnId);
+      });
+    });
+
     let jwtCookie_temp = getCookieValueByName('Authorization');
     let jwtCookie = removeBearerPrefix(jwtCookie_temp);
     function getCookieValueByName(name) {
@@ -174,13 +197,9 @@
         })
                 .then(response => {
                   if (response.status === 400) {
-                    alert('요청이 실패했습니다.');
-                    window.close(); // 팝업 창 닫기
-                    window.location.reload();
+                    errorMsg("할당을 실패하였습니다.")
                   } else if (response.ok) {
-                    alert('할당이 완료되었습니다.');
-                    window.close(); // 팝업 창 닫기
-                    window.location.reload();
+                    successMsg("할당을 성공하였습니다.")
                   }
                 })
                 .catch(error => {
@@ -303,7 +322,6 @@
       .then(response => response.json())
       .then(data => {
         successMsg("댓글 작성 성공");
-        window.location.reload();
       })
       .catch(error => {
         errorMsg("댓글 작성 실패");
@@ -328,7 +346,6 @@
         })
         .then(data => {
           successMsg("댓글 삭제 성공");
-          window.location.reload();
         })
         .catch(error => {
           // 오류 처리 로직을 작성합니다.
@@ -357,7 +374,6 @@
       })
       .then(data => {
         successMsg("댓글 수정 성공");
-        window.location.reload();
       })
       .catch(error => {
         // 오류 처리 로직을 작성합니다.
@@ -398,7 +414,7 @@
         icon: 'success',
         title: msg
       }).then(function () {
-        window.history.back();
+        window.location.reload();
       })
     }
 
