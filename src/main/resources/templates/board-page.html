@@ -98,7 +98,7 @@
                 </button>
             </div>
         </div>
-        <button class="add-card-button">+ Add Card</button>
+        <button class="add-card-button" th:id="${column.id} + '-add-card'">+ Add Card</button>
     </div>
 
 </div>
@@ -145,6 +145,14 @@
             }
             console.log(columnId);
         });
+
+        // 카드 추가
+        $(".add-card-button").click(function () {
+            const columnId = $(this).attr("id").split("-")[0];
+            window.location.href = `/view/${columnId}/cards`
+        });
+
+
     });
 
     // 컬럼 이름 수정

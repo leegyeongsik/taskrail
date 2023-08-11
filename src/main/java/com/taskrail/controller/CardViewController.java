@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/view")
 public class CardViewController {
 
-    @GetMapping("/cards")
+    @GetMapping("/{columnId}/cards")
     public String createCard(){
         return "card-create";
     }
