@@ -55,9 +55,9 @@
             </div>
         </div>
         <div th:each="card : ${column.cards}" class="card" th:id="${card.id}">
-            <div class="cards" th:id="${card.id}">
-                <p th:text="${card.title}"></p>
-                <p th:text="${card.content}"></p>
+            <div class="cards" th:id="${card.id}" th:style="'background-color: ' + ${card.color}">
+                <p class="card-text" th:text="${card.title}"></p>
+                <p class="card-text" th:text="${card.content}"></p>
             </div>
             <div class="move-button-container">
                 <button class="move-card-left-btn" th:id="${column.id + '-move-card-left-' + card.id}">
@@ -79,7 +79,7 @@
         toast: true,
         position: 'center-center',
         showConfirmButton: false,
-        timer: 2000,
+        timer: 600,
         timerProgressBar: true,
         didOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer)
