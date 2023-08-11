@@ -64,10 +64,209 @@
         .move-column-right-btn {
             border: none;
         }
+
+
+        /*서치바*/
+        body, button, input {
+            /*font: 1em Hind, sans-serif;*/
+            /*line-height: 1.5em;*/
+        }
+        body, input {
+            color: #171717;
+        }
+        .search-bar {
+            display: flex;
+        }
+
+        .search-bar input,
+        .search-btn,
+        .search-btn:before,
+        .search-btn:after {
+            transition: all 0.25s ease-out;
+        }
+        .search-bar input,
+        .search-btn {
+            width: 3em;
+            height: 3em;
+        }
+        .search-bar input:invalid:not(:focus),
+        .search-btn {
+            cursor: pointer;
+        }
+        .search-bar,
+        .search-bar input:focus,
+        .search-bar input:valid  {
+            width: 100%;
+        }
+        .search-bar input:focus,
+        .search-bar input:not(:focus) + .search-btn:focus {
+            outline: transparent;
+        }
+        .search-bar {
+            margin-left: 1400px;
+            padding: 1.5em;
+            justify-content: right;
+            max-width: 10em;
+        }
+        .search-bar input {
+            background: transparent;
+            border-radius: 1.5em;
+            box-shadow: 0 0 0 0.4em #171717 inset;
+            padding: 0.75em;
+            transform: translate(0.5em,0.5em) scale(0.5);
+            transform-origin: 100% 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .search-bar input::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+        .search-bar input:focus,
+        .search-bar input:valid {
+            background: #fff;
+            border-radius: 0.375em 0 0 0.375em;
+            box-shadow: 0 0 0 0.1em #d9d9d9 inset;
+            transform: scale(1);
+        }
+        .search-btn {
+            background: #171717;
+            border-radius: 0 0.75em 0.75em 0 / 0 1.5em 1.5em 0;
+            padding: 0.75em;
+            position: relative;
+            transform: translate(0.25em,0.25em) rotate(45deg) scale(0.25,0.125);
+            transform-origin: 0 50%;
+        }
+        .search-btn:before,
+        .search-btn:after {
+            content: "";
+            display: block;
+            opacity: 0;
+            position: absolute;
+        }
+        .search-btn:before {
+            border-radius: 50%;
+            box-shadow: 0 0 0 0.2em #f1f1f1 inset;
+            top: 0.75em;
+            left: 0.75em;
+            width: 1.2em;
+            height: 1.2em;
+        }
+        .search-btn:after {
+            background: #f1f1f1;
+            border-radius: 0 0.25em 0.25em 0;
+            top: 51%;
+            left: 51%;
+            width: 1em;
+            height: 0.25em;
+            transform: translate(0.2em,0) rotate(45deg);
+            transform-origin: 0 50%;
+        }
+        .search-btn span {
+            display: inline-block;
+            overflow: hidden;
+            width: 1px;
+            height: 1px;
+        }
+
+        /* Active state */
+        .search-bar input:focus + .search-btn,
+        .search-bar input:valid + .search-btn {
+            background: #2762f3;
+            border-radius: 0 0.375em 0.375em 0;
+            transform: scale(1);
+        }
+        .search-bar input:focus + .search-btn:before,
+        .search-bar input:focus + .search-btn:after,
+        .search-bar input:valid + .search-btn:before,
+        .search-bar input:valid + .search-btn:after {
+            opacity: 1;
+        }
+        .search-bar input:focus + .search-btn:hover,
+        .search-bar input:valid + .search-btn:hover,
+        .search-bar input:valid:not(:focus) + .search-btn:focus {
+            background: #0c48db;
+        }
+        .search-bar input:focus + .search-btn:active,
+        .search-bar input:valid + .search-btn:active {
+            transform: translateY(1px);
+        }
+
+        @media screen and (prefers-color-scheme: dark) {
+            body, input {
+                color: #f1f1f1;
+            }
+            body {
+                background: #171717;
+            }
+            .search-bar input {
+                box-shadow: 0 0 0 0.4em #f1f1f1 inset;
+            }
+            .search-bar input:focus,
+            .search-bar input:valid {
+                background: #3d3d3d;
+                box-shadow: 0 0 0 0.1em #3d3d3d inset;
+            }
+            .search-btn {
+                background: #f1f1f1;
+            }
+        }
+
+
+        /*?*/
+        a, a:hover, a:visited{color:#fff; text-decoration:none;}
+
+        #pop{
+            width: 316px;
+            height: 500px;
+            background: #FFFFFF;
+            color: #fff;
+            position: absolute;
+            top: 174.4px;
+            left: 1457px;
+            text-align: center;
+            border: 1px solid #000;
+            border-radius: 5px;        }
+        #close{
+            width:100px; margin:auto; cursor:pointer; font-weight:bold; color: #171717;
+        }
+        #submit{
+            width:100px; margin:auto; cursor:pointer; font-weight:bold; color: #171717;
+        }
+
+        .listBox {
+            max-width: 500px;
+        }
+
+        .listInner {
+            background-color: #dedede;
+            margin: 5px 5px;
+            padding: 4px;
+        }
     </style>
 </head>
 <body>
-<h1 th:text="${board.title}"></h1>
+<h1 th:text="${board.title}">
+</h1>
+<h1>
+    <div class = "search-bar" >
+        <input type="search" value="" name="search" id="btn_toggless" pattern=".*\S.*" required>
+        <button class="search-btn" value="" type="submit" id="btn_toggle">
+            <span>Search</span>
+        </button>
+    </div>
+</h1>
+
+<h1>
+    <div id="pop"
+         style="display:none; overflow: auto;">
+        <div style="height:370px; left: 150px">
+            <div class="listBox" style="font-size: 15px; color:#171717;">
+                selected: <input type="text" id="title_text" style="font-size: 15px; color:#171717;"><br>
+            </div>
+        </div>
+    </div>
+</h1>
 
 <div class="column-container" data-board-id="${board.boardId}">
     <div th:each="column : ${columns}" class="column" th:id="${'column-' + column.id}">
@@ -86,8 +285,8 @@
         </div>
         <div th:each="card : ${column.cards}" class="card" th:id="${card.id}">
             <div class="cards" th:id="${card.id}">
-            <p th:text="${card.title}"></p>
-            <p th:text="${card.content}"></p>
+                <p th:text="${card.title}"></p>
+                <p th:text="${card.content}"></p>
             </div>
             <div class="move-button-container">
                 <button class="move-card-left-btn" th:id="${column.id + '-move-card-left-' + card.id}">
@@ -147,221 +346,320 @@
             console.log(columnId);
 
         });
-
+        $('#btn_toggle').click(function() {
+            $('#pop').show();
+        });
         // 카드 추가
         $(".add-card-button").click(function () {
             const columnId = $(this).attr("id").split("-")[0];
             window.location.href = `/view/${columnId}/cards`
         });
 
-
-    });
-
-    // 컬럼 이름 수정
-    function editColumn(columnId) {
-        var newColumnName = prompt("Enter the new column name:");
-        if (newColumnName === null) {
-            return; // 사용자가 취소를 눌렀을 경우 함수 종료
-        }
-        var requestData = JSON.stringify({
-            name: newColumnName,
-            boardId: boardId
-        });
-
-        $.ajax({
-            type: "PUT",
-            url: `/api/columns/${columnId}`,
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": Cookies.get('Authorization')
-            },
-            data: requestData,
-            success: function (data) {
-                // alert("Column name updated successfully!");
-                updateColumnNameInDOM(columnId, data.name);
-                successMsg("칼럼 수정 완료");
-            },
-            error: function () {
-                errorMsg("칼럼 수정 실패");
+        // 컬럼 이름 수정
+        function editColumn(columnId) {
+            var newColumnName = prompt("Enter the new column name:");
+            if (newColumnName === null) {
+                return; // 사용자가 취소를 눌렀을 경우 함수 종료
             }
-        });
-    }
+            var requestData = JSON.stringify({
+                name: newColumnName,
+                boardId: boardId
+            });
 
-    // 컬럼 생성
-    function createColumn() {
-        var ColumnName = prompt("Enter the new column name:");
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}`,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": Cookies.get('Authorization')
+                },
+                data: requestData,
+                success: function (data) {
+                    // alert("Column name updated successfully!");
+                    updateColumnNameInDOM(columnId, data.name);
+                    successMsg("칼럼 수정 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 수정 실패");
+                }
+            });
 
-        if (ColumnName === null) {
-            return; // 사용자가 취소를 눌렀을 경우 함수 종료
+
         }
 
-        var requestData = JSON.stringify({
-            name: ColumnName,
-            boardId: boardId
-        });
+        // 컬럼 생성
+        function createColumn() {
+            var ColumnName = prompt("Enter the new column name:");
 
-        $.ajax({
-            type: "POST",
-            url: "/api/columns",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": Cookies.get('Authorization')
-            },
-            data: requestData,
-            success: function (data) {
-                successMsg("칼럼 생성 완료");
-            },
-            error: function () {
-                errorMsg("칼럼 생성 실패");
+            if (ColumnName === null) {
+                return; // 사용자가 취소를 눌렀을 경우 함수 종료
             }
-        });
-    }
 
-    // 컬럼 삭제
-    function deleteColumn(columnId) {
-        $.ajax({
-            type: "DELETE",
-            url: `/api/columns/${columnId}`,
-            headers: {
-                "Authorization": Cookies.get('Authorization')
-            },
-            success: function () {
-                successMsg("칼럼 삭제 완료");
-            },
-            error: function () {
-                errorMsg("칼럼 삭제 실패");
-            }
-        });
-    }
+            var requestData = JSON.stringify({
+                name: ColumnName,
+                boardId: boardId
+            });
 
-    // 컬럼 수정한 이름 업데이트
-    function updateColumnNameInDOM(columnId, newName) {
-        const columnNameElement = document.querySelector(`#column-name-${columnId}`);
-        if (columnNameElement) {
-            columnNameElement.textContent = newName;
+            $.ajax({
+                type: "POST",
+                url: "/api/columns",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": Cookies.get('Authorization')
+                },
+                data: requestData,
+                success: function (data) {
+                    successMsg("칼럼 생성 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 생성 실패");
+                }
+            });
         }
-    }
 
-    // 컬럼 오른쪽 이동 버튼 클릭 이벤트 처리
-    $(".move-column-right-btn").click(function () {
-        const columnId = $(this).attr("id").split("-")[3];
-        moveColumnRight(columnId);
-    });
+        // 컬럼 삭제
+        function deleteColumn(columnId) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/columns/${columnId}`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function () {
+                    successMsg("칼럼 삭제 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 삭제 실패");
+                }
+            });
+        }
 
-    // 컬럼 오른쪽으로 이동
-    function moveColumnRight(columnId) {
-        $.ajax({
-            type: "PUT",
-            url: `/api/columns/${columnId}/right`,
-            headers: {
-                "Authorization": Cookies.get('Authorization')
-            },
-            success: function (data) {
-                successMsg(data); // 성공 메시지 표시
-            },
-            error: function () {
-                errorMsg("더이상 우측으로 이동 불가합니다.");
+        // 컬럼 수정한 이름 업데이트
+        function updateColumnNameInDOM(columnId, newName) {
+            const columnNameElement = document.querySelector(`#column-name-${columnId}`);
+            if (columnNameElement) {
+                columnNameElement.textContent = newName;
             }
+        }
+
+        // 컬럼 오른쪽 이동 버튼 클릭 이벤트 처리
+        $(".move-column-right-btn").click(function () {
+            const columnId = $(this).attr("id").split("-")[3];
+            moveColumnRight(columnId);
         });
-    }
 
-    // 컬럼 왼쪽으로 이동 버튼
-    $(".move-column-left-btn").click(function () {
-        var columnId = $(this).attr("id").split("-")[3];
-        moveColumnLeft(columnId);
-    });
+        // 컬럼 오른쪽으로 이동
+        function moveColumnRight(columnId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}/right`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg(data); // 성공 메시지 표시
+                },
+                error: function () {
+                    errorMsg("더이상 우측으로 이동 불가합니다.");
+                }
+            });
+        }
 
-    // 컬럼 왼쪽으로 이동
-    function moveColumnLeft(columnId) {
-        $.ajax({
-            type: "PUT",
-            url: `/api/columns/${columnId}/left`,
-            headers: {
-                "Authorization": Cookies.get('Authorization')
-            },
-            success: function (data) {
-                successMsg(data); // 성공 메시지 표시
-            },
-            error: function () {
-                errorMsg("더이상 좌측으로 이동 불가합니다.");
-            }
+        // 컬럼 왼쪽으로 이동 버튼
+        $(".move-column-left-btn").click(function () {
+            var columnId = $(this).attr("id").split("-")[3];
+            moveColumnLeft(columnId);
         });
-    }
+
+        // 컬럼 왼쪽으로 이동
+        function moveColumnLeft(columnId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}/left`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg(data); // 성공 메시지 표시
+                },
+                error: function () {
+                    errorMsg("더이상 좌측으로 이동 불가합니다.");
+                }
+            });
+        }
 
 
 
 
 
-    // 카드 클릭시 상세 페이지 로드
-    $(".cards").click(function () {
-        const cardId = $(this).attr("id");
-        window.location.href = `/view/cards/${cardId}`
-    });
-
-
-    // 카드 오른쪽 이동 버튼 클릭 이벤트 처리
-    $(".move-card-right-btn").click(function () {
-        const cardId = $(this).attr("id").split("-")[4];
-        moveCardRight(cardId);
-    });
-
-    // 카드 오른쪽으로 이동
-    function moveCardRight(cardId) {
-        $.ajax({
-            type: "PUT",
-            url: `/api/cards/${cardId}/next`,
-            headers: {
-                "Authorization": Cookies.get('Authorization')
-            },
-            success: function (data) {
-                successMsg("우측 컬럼으로 이동 성공");
-                location.reload();
-            },
-            error: function () {
-                errorMsg("우측으로 이동할 칼럼이 없습니다.");
-            }
+        // 카드 클릭시 상세 페이지 로드
+        $(".cards").click(function () {
+            const cardId = $(this).attr("id");
+            window.location.href = `/view/cards/${cardId}`
         });
-    }
 
-    // 카드 왼쪽으로 이동 버튼
-    $(".move-card-left-btn").click(function () {
-        const cardId = $(this).attr("id").split("-")[4];
-        moveCardLeft(cardId);
-    });
 
-    // 카드 왼쪽으로 이동
-    function moveCardLeft(cardId) {
-        $.ajax({
-            type: "PUT",
-            url: `/api/cards/${cardId}/prev`,
-            headers: {
-                "Authorization": Cookies.get('Authorization')
-            },
-            success: function (data) {
-                successMsg("좌측 컬럼으로 이동 성공"); // 성공 메시지 표시
-                location.reload();
-            },
-            error: function () {
-                errorMsg("좌측으로 이동할 칼럼이 없습니다.");
-            }
+        // 카드 오른쪽 이동 버튼 클릭 이벤트 처리
+        $(".move-card-right-btn").click(function () {
+            const cardId = $(this).attr("id").split("-")[4];
+            moveCardRight(cardId);
         });
-    }
 
-    function successMsg(msg) {
-        Toast.fire({
-            icon: 'success',
-            title: msg
-        }).then(function () {
-            window.location.reload();
+        // 카드 오른쪽으로 이동
+        function moveCardRight(cardId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/cards/${cardId}/next`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg("우측 컬럼으로 이동 성공");
+                    location.reload();
+                },
+                error: function () {
+                    errorMsg("우측으로 이동할 칼럼이 없습니다.");
+                }
+            });
+        }
+
+        // 카드 왼쪽으로 이동 버튼
+        $(".move-card-left-btn").click(function () {
+            const cardId = $(this).attr("id").split("-")[4];
+            moveCardLeft(cardId);
+        });
+
+        // 카드 왼쪽으로 이동
+        function moveCardLeft(cardId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/cards/${cardId}/prev`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg("좌측 컬럼으로 이동 성공"); // 성공 메시지 표시
+                    location.reload();
+                },
+                error: function () {
+                    errorMsg("좌측으로 이동할 칼럼이 없습니다.");
+                }
+            });
+        }
+        var list
+        var temp_selected1
+        var temp_selected2
+
+        $(document).on('click',"button[id='btn_toggle']" , function (e) { // 유저 검색
+            e.preventDefault();
+            list = [];
+            temp_selected1 = [];
+            temp_selected2 = [];
+
+            var text = document.getElementById("btn_toggless").value;
+            $.ajax({
+                url: `/api/boards/${boardId}/search?name=${text}`,
+                type: 'GET',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+                },
+                success: function (response) {
+                    if (response) {
+                        $('#pop').empty();
+                        var boardaaa =
+                            `<div style = "height:370px; left: 150px" >
+                            <div class = "listBox" style = "font-size: 15px; color:#171717;" >
+                            selected:<input type="text" id="title_text"  value=""style="font-size: 15px; color:#171717;"><br>
+                            </div>
+                        </div>`
+                        $('#pop').append(boardaaa);
+
+                        for (let i = 0; i < response.length; i++) {
+                            if (response[i].isin == true){
+                                var isin = "o";
+                                var boards=`
+                                    <div class="listInner">
+                                        <span class="country" style="font-size: 20px">${response[i].name}</span>
+                                        <span class="exist" style="font-size: 20px">| ${isin}</span>
+                                    </div>`
+                                $('.listBox').append(boards);
+
+                            } else {
+                                var isin = "x";
+                                var boards=`
+                                    <div class="listInner">
+                                        <span class="country" style="font-size: 20px">${response[i].name}</span>
+                    a                    <span class="exist" style="font-size: 20px">| ${isin}</span>
+                                        <span class="add" style="font-size: 20px">
+                                        <button class="btns" id =${response[i].userId} value=${response[i].name} style="border: 1px solid #FFFFFF; background-color:#FFFFFF;">| Add</button></span>
+                                    </div>`
+                                $('.listBox').append(boards);
+                            }
+                        }
+                    }
+                    var boardss=`
+                    <div id="submit">Add</div>
+                    <div id="close">close</div>`
+                    $('.listBox').append(boardss);
+                    $('#close').click(function() {
+                        $('#pop').hide();
+                    });
+                }
+            })
         })
-    }
 
-    function errorMsg(msg){
-        Toast.fire({
-            icon: 'error',
-            title: msg
+        $(document).on('click',"button[class='btns']" , function (e) { // 유저 add
+            e.preventDefault();
+            var tagIds = e.target.id
+            var tagId = e.target.value
+
+            list.push(tagIds)
+            if (temp_selected1 != null){
+                temp_selected2 = tagId
+                temp_selected1 = temp_selected1 + ' ' + temp_selected2;
+            } else {
+                temp_selected1 = tagId
+            }
+
+            $('input[id=title_text]').attr('value',temp_selected1)
         })
-    }
+
+        $(document).on('click',"div[id='submit']" , function (e) { // 유처 초대
+            e.preventDefault();
+            $.ajax({
+                url: `/api/boards/${boardId}`,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+                },
+                data: JSON.stringify({user_id: list}),
+
+                success: function (response) {
+                    if (response) {
+                        window.location.reload();
+                    }
+                }
+            })
+        })
+
+        function successMsg(msg) {
+            Toast.fire({
+                icon: 'success',
+                title: msg
+            }).then(function () {
+                window.location.reload();
+            })
+        }
+
+        function errorMsg(msg){
+            Toast.fire({
+                icon: 'error',
+                title: msg
+            })
+        }})
+
 
 
 </script>

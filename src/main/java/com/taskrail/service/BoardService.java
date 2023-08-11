@@ -68,9 +68,9 @@ public class BoardService {
             // 보드아이디랑 user아이디랑 같은 값을 가지고있는 애들이 롤에 있냐 있으면 optional로 있으면 true 없으면 false
             Optional<BoardRole> isinUser=boardRoleRepository.findByUser_idAndBoard_boardId(user.getId(),board_id);
             if(!isinUser.isPresent()){
-                userResponseDtoList.add(new UserResponseDto(user,true));
-            } else {
                 userResponseDtoList.add(new UserResponseDto(user,false));
+            } else {
+                userResponseDtoList.add(new UserResponseDto(user,true));
             }
         }
         return userResponseDtoList;
