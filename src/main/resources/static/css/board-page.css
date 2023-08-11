@@ -38,3 +38,18 @@
   width: 100%;
   text-align: center;
 }
+
+.move-button-container {
+  display: flex; /* 버튼을 가로로 정렬 */
+  justify-content: flex-end; /* 버튼을 오른쪽 끝에 정렬 */
+  /* 버튼을 수직으로 중앙 정렬 */
+  height: 100%; /* 부모 요소인 .column-header의 높이와 동일하게 설정 */
+  padding-right: 5px; /* 오른쪽 여백 추가 */
+  align-items: flex-start;
+  margin-top: -25px;
+}
+
+.move-column-left-btn,
+.move-column-right-btn {
+  border: none;
+}
