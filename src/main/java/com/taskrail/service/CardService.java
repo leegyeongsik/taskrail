@@ -1,14 +1,8 @@
 package com.taskrail.service;
 
-import com.taskrail.dto.CardAssignUserRequestDto;
-import com.taskrail.dto.CardRequestDto;
-import com.taskrail.dto.CardResponseDto;
-import com.taskrail.dto.CommentResponseDto;
+import com.taskrail.dto.*;
 import com.taskrail.entity.*;
-import com.taskrail.repository.CardRepository;
-import com.taskrail.repository.CardRoleRepository;
-import com.taskrail.repository.ColumnRepository;
-import com.taskrail.repository.UserRepository;
+import com.taskrail.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +19,7 @@ public class CardService {
     private final ColumnRepository columnRepository;
     private final UserRepository userRepository;
     private final CardRoleRepository cardRoleRepository;
+    private final BoardRepository boardRepository;
     public List<CardResponseDto> getCards(Long columnId) {
         return cardRepository.findAllByColumn_IdOrderByOrdersDesc(columnId).stream().map(CardResponseDto::new).toList();
 
@@ -112,23 +107,7 @@ public class CardService {
         card.updatePrev(prevColumn);
         log.info("update card Column: " + card.getColumn().getName());
 
-//      예성님께서 이전에 작성해놓으신 코드
-/*        Card card = cardRepository.findById(cardId).orElseThrow(
-            () -> new IllegalArgumentException("카드가 없습니다.")
-        );
-        if(card.getColumn().getId() == 1){
-            throw new IllegalArgumentException("앞으로 이동할 수 없습니다.");
-        }
-        Columns column = columnRepository.findById(card.getColumn().getId()-1).orElseThrow(
-            ()-> new IllegalArgumentException("앞으로 이동할 수 없습니다.")
-        );
-        //jpa sql 직접 사용해보기, 어노테이션 query
-        // update
-        // set columnss = columnss -1
-        // where cardId = cardId
 
-
-        card.updatePrev(column);*/
     }
 
     @Transactional
@@ -157,21 +136,6 @@ public class CardService {
         log.info("update card Column: " + card.getColumn().getName());
 
 
-//      예성님께서 이전에 작성해놓으신 코드
-/*        Card card = cardRepository.findById(cardId).orElseThrow(
-                () -> new IllegalArgumentException("카드가 없습니다.")
-        );
-        List<Card> cards = cardRepository.findAll();
-
-        Long lastIndex = cards.get(cards.size() - 1).getColumn().getId();
-
-        if(card.getColumn().getId().equals(lastIndex)){
-            throw new IllegalArgumentException("뒤로 이동할 수 없습니다.");
-        }
-        Columns column = columnRepository.findById(card.getColumn().getId()+1).orElseThrow(
-                ()-> new IllegalArgumentException("뒤로 이동할 수 없습니다.")
-        );
-        card.updateNext(column);*/
     }
 
     @Transactional
@@ -255,5 +219,20 @@ public class CardService {
 
 
 
+    }
+    public List<UserResponseDto> getAddRoleUser(Long boardId, Long cardId) {
+        Card card = cardRepository.findById(cardId).orElseThrow(
+                ()->new NullPointerException("카드가 없습니다.")
+        );
+        List<UserResponseDto> userResponseDtoList = new ArrayList<>();
+        List<User> userList = boardRepository.getBoardUser(boardId);
+        for (User user : userList) {
+            if(card.getUser().getId().equals(user.getId())){
+                continue;
+            }
+            userResponseDtoList.add(new UserResponseDto(user));
+        }
+
+        return userResponseDtoList;
     }
 }
