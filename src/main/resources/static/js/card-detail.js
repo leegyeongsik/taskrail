@@ -9,8 +9,7 @@ const Toast = Swal.mixin({
     toast.addEventListener('mouseleave', Swal.resumeTimer)
   }
 })
-let jwtCookie_temp = getCookieValueByName('Authorization');
-let jwtCookie = removeBearerPrefix(jwtCookie_temp);
+
 
 $(document).ready(function () {
   // 컬럼 이름 수정
@@ -21,27 +20,7 @@ $(document).ready(function () {
     editColumn(columnId);
   });
 });
-function getCookieValueByName(name) {
-  let cookie = document.cookie;
-  let cookiePairs = cookie.split(';');
 
-  for (let i = 0; i < cookiePairs.length; i++) {
-
-    let pair = cookiePairs[i].trim();
-    if (pair.startsWith(name + '=')) {
-      return pair.substring(name.length + 1);
-    }
-  }
-  return null;
-}
-
-function removeBearerPrefix(jwtCookie) {
-  const prefix = "Bearer%20";
-  if (jwtCookie.startsWith(prefix)) {
-    return jwtCookie.substring(prefix.length);
-  }
-  return jwtCookie;
-}
 
 window.onload = function () {
   getCardData();

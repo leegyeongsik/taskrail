@@ -23,6 +23,29 @@
   <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
 
   <script>
+    let jwtCookie_temp = getCookieValueByName('Authorization');
+    let jwtCookie = removeBearerPrefix(jwtCookie_temp);
+    function getCookieValueByName(name) {
+      let cookie = document.cookie;
+      let cookiePairs = cookie.split(';');
+
+      for (let i = 0; i < cookiePairs.length; i++) {
+
+        let pair = cookiePairs[i].trim();
+        if (pair.startsWith(name + '=')) {
+          return pair.substring(name.length + 1);
+        }
+      }
+      return null;
+    }
+
+    function removeBearerPrefix(jwtCookie) {
+      const prefix = "Bearer%20";
+      if (jwtCookie.startsWith(prefix)) {
+        return jwtCookie.substring(prefix.length);
+      }
+      return jwtCookie;
+    }
     // js 파일로 분리하게 되면 아래 오류나서 html 에 작성.
     let cardId = [[${cardId}]];
     let boardId = [[${boardId}]];
@@ -377,5 +400,4 @@
 </div>
 
 </body>
-<script type="application/javascript" src="/js/card-detail.js"></script>
 </html>
