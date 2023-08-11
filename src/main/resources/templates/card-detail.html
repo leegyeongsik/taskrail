@@ -1,71 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="#">
-    <title>카드 상세 페이지</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
-    <script>
-        let jwtCookie_temp = getCookieValueByName('Authorization');
-        let jwtCookie = removeBearerPrefix(jwtCookie_temp);
-        function getCookieValueByName(name) {
-            let cookie = document.cookie;
-            let cookiePairs = cookie.split(';');
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="#">
+  <title>카드 상세 페이지</title>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
-            for (let i = 0; i < cookiePairs.length; i++) {
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+        crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+          crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
+  <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'center-center',
+      showConfirmButton: false,
+      timer: 600,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+    let jwtCookie_temp = getCookieValueByName('Authorization');
+    let jwtCookie = removeBearerPrefix(jwtCookie_temp);
 
-                let pair = cookiePairs[i].trim();
-                if (pair.startsWith(name + '=')) {
-                    return pair.substring(name.length + 1);
-                    }
-                }
-                return null;
-            }
+    $(document).ready(function () {
+      // 컬럼 이름 수정
+      $(".edit-column-btn").click(function () {
+        var columnId = $(this).attr("id");
+        console.log(columnId);
+        console.log(boardId);
+        editColumn(columnId);
+      });
+    });
+    function getCookieValueByName(name) {
+      let cookie = document.cookie;
+      let cookiePairs = cookie.split(';');
 
-        function removeBearerPrefix(jwtCookie) {
-            const prefix = "Bearer%20";
-            if (jwtCookie.startsWith(prefix)) {
-                return jwtCookie.substring(prefix.length);
-            }
-            return jwtCookie;
+      for (let i = 0; i < cookiePairs.length; i++) {
+
+        let pair = cookiePairs[i].trim();
+        if (pair.startsWith(name + '=')) {
+          return pair.substring(name.length + 1);
         }
+      }
+      return null;
+    }
 
-        let cardId = [[${cardId}]];
-        window.onload = function() {
-            getCardData();
+    function removeBearerPrefix(jwtCookie) {
+      const prefix = "Bearer%20";
+      if (jwtCookie.startsWith(prefix)) {
+        return jwtCookie.substring(prefix.length);
+      }
+      return jwtCookie;
+    }
+
+    let cardId = [[${cardId}]];
+    window.onload = function () {
+      getCardData();
+    }
+
+    function getCardData() {
+      fetch('/api/cards/' + cardId, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwtCookie}`,
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(response => {
+        if (response.status === 400) {
+          alert('요청이 실패했습니다.');
         }
+        return response.json(); // JSON 형태의 응답 데이터 파싱
+      })
+      .then(data => {
+        console.log(data);
+        let due_date = data.due_Date;
+        let title = data.title;
+        let content = data.content;
+        let cardRoleList = data.cardRoleResponseDtoList;
+        let commentList = data.commentList;
 
-        function getCardData() {
-            fetch('/api/cards/'+cardId, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${jwtCookie}`,
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(response => {
-                    if (response.status === 400) {
-                        alert('요청이 실패했습니다.');
-                    }
-                    return response.json(); // JSON 형태의 응답 데이터 파싱
-                })
-                .then(data => {
-                    console.log(data);
-                    let due_date = data.due_Date;
-                    let title = data.title;
-                    let content = data.content;
-                    let cardRoleList = data.cardRoleResponseDtoList;
-                    let commentList = data.commentList;
-
-                    let temp_html=`
+        let temp_html = `
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-between mb-5">
@@ -90,17 +119,17 @@
                                     <div class="work-userList">
 `;
 
-                    let user_role_html = '';
-                    for(let i=0; i<cardRoleList.length; i++) {
-                                let role_user = cardRoleList[i].userName;
+        let user_role_html = '';
+        for (let i = 0; i < cardRoleList.length; i++) {
+          let role_user = cardRoleList[i].userName;
 
-                        let temp_html2 = `
+          let temp_html2 = `
                                         <span class="me-3">${role_user}</span>
                         `;
 
-                        user_role_html += temp_html2;
-                    }
-                    let temp_html3 = `
+          user_role_html += temp_html2;
+        }
+        let temp_html3 = `
                                     </div>
                                 </div>
                                 <div class="mt-5">
@@ -110,12 +139,12 @@
                                     <button class="btn btn-dark mt-3" onclick="createComments(cardId)">작성</button>
                                     <div class="commentList-box mt-5">
 `;
-                    let comment_html = '';
-                    for(let j = 0; j<commentList.length; j++) {
-                        let comment_username = commentList[j].userName;
-                        let comment_content = commentList[j].content;
+        let comment_html = '';
+        for (let j = 0; j < commentList.length; j++) {
+          let comment_username = commentList[j].userName;
+          let comment_content = commentList[j].content;
 
-                        let temp_html4 = `
+          let temp_html4 = `
                                         <div class="d-flex justify-content-between">
                                             <span>${comment_username}</span>
                                             <div>
@@ -129,26 +158,27 @@
                                             <textarea class="form-control" rows="3" id="comment-input-${commentList[j].id}" style="display: none">${commentList[j].content}</textarea>
                                         </div>
                     `;
-                        comment_html += temp_html4;
-                    }
-                    let temp_html5 =
-                    `
+          comment_html += temp_html4;
+        }
+        let temp_html5 =
+            `
                                     </div>
                                 </div>
                             </div>
                         </div>
                     `
-                    let box_html = `${temp_html}${user_role_html}${temp_html3}${comment_html}${temp_html5}`;
-                    $('.container').append(box_html);
-                })
-                .catch(error => {
-                    // 오류 처리 로직을 작성합니다.
-                    console.error(error);
-                });
-        }
+        let box_html = `${temp_html}${user_role_html}${temp_html3}${comment_html}${temp_html5}`;
+        $('.container').append(box_html);
+      })
+      .catch(error => {
+        // 오류 처리 로직을 작성합니다.
+        console.error(error);
+      });
+    }
 
         let state = true
         function toggleUpdateComment(prevElementId,nextElementId,completeBtn){
+
             console.log(prevElementId,nextElementId,completeBtn)
 
             let prev = document.getElementById(prevElementId);
@@ -174,100 +204,126 @@
                 body : bodyContent
             }
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${jwtCookie}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.msg);
-                    //window.location.reload()
-                })
-                .catch(error => {
-                    console.error("댓글 작성 실패:", error);
-                });
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwtCookie}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        successMsg("댓글 작성 성공");
+        window.location.reload();
+      })
+      .catch(error => {
+        errorMsg("댓글 작성 실패");
+      });
 
-        }
-        function deleteComments(element){
+    }
 
-            let commentId = element.getAttribute('value');
-            let url = '/api/comments/'+commentId
+    function deleteComments(element) {
+      let commentId = element.getAttribute('value');
+      let url = '/api/comments/' + commentId
 
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${jwtCookie}`
-                },
-            })
-                .then(response => {
-                    return response.json(); // JSON 형태의 응답 데이터 파싱
-                })
-                .then(data => {
-                    alert(data.msg);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    // 오류 처리 로직을 작성합니다.
-                    console.error(error);
-                });
-        }
-        function updateComments(nextElementId,element){
-            let nextValue = document.getElementById(nextElementId).value
-            let commentId = element.getAttribute('value');
+      const confirmDelete = confirm("정말 댓글을 삭제하시겠습니까?");
+      if (confirmDelete) {
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${jwtCookie}`
+          },
+        })
+        .then(response => {
+          return response.json(); // JSON 형태의 응답 데이터 파싱
+        })
+        .then(data => {
+          successMsg("댓글 삭제 성공");
+          window.location.reload();
+        })
+        .catch(error => {
+          // 오류 처리 로직을 작성합니다.
+          errorMsg("댓글 삭제 실패");
+        });
+      }
+    }
 
-            let formData ={
-                content : nextValue
-            }
-            fetch('/api/comments/'+commentId, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${jwtCookie}`,
-                    'Content-Type' : 'application/json'
-                },
-                body : JSON.stringify(formData)
-            })
-                .then(response => {
-                    return response.json(); // JSON 형태의 응답 데이터 파싱
-                })
-                .then(data => {
-                    alert(data.msg);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    // 오류 처리 로직을 작성합니다.
-                    console.error(error);
-                });
-        }
-        function updateCardPage(cardId){
-            window.location.href='/view/cards/' + cardId + '/update';
-        }
+    function updateComments(nextElementId, element) {
+      let nextValue = document.getElementById(nextElementId).value
+      let commentId = element.getAttribute('value');
 
-        function deleteCard(cardId){
-            let url = '/api/cards/'+cardId;
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${jwtCookie}`,
-                },
-            })
-                .then(function(response) {
-                    if (response.ok) {
-                        console.log('카드가 성공적으로 삭제되었습니다.');
-                        history.back();
-                    } else {
-                        console.log('카드 삭제에 실패했습니다.');
-                    }
-                })
-                .catch(function(error) {
-                    console.log('게시글 삭제 중 오류가 발생했습니다.', error);
-                });
-        }
+      let formData = {
+        content: nextValue
+      }
+      fetch('/api/comments/' + commentId, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${jwtCookie}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        return response.json(); // JSON 형태의 응답 데이터 파싱
+      })
+      .then(data => {
+        successMsg("댓글 수정 성공");
+        window.location.reload();
+      })
+      .catch(error => {
+        // 오류 처리 로직을 작성합니다.
+        errorMsg("댓글 수정 실패");
+      });
+    }
 
-    </script>
+    function updateCardPage(cardId) {
+      window.location.href = '/view/cards/' + cardId + '/update';
+    }
+
+    function deleteCard(cardId) {
+      const confirmDelete = confirm("정말 카드를 삭제하시겠습니까?");
+      if (confirmDelete) {
+        let url = '/api/cards/' + cardId;
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${jwtCookie}`,
+          },
+        })
+        .then(function (response) {
+          if (response.ok) {
+            successMsg('카드가 성공적으로 삭제되었습니다.');
+            history.back();
+          } else {
+            errorMsg('카드 삭제에 실패했습니다.');
+          }
+        })
+        .catch(function (error) {
+          console.log('게시글 삭제 중 오류가 발생했습니다.', error);
+        });
+      }
+    }
+
+    function successMsg(msg) {
+      Toast.fire({
+        icon: 'success',
+        title: msg
+      }).then(function () {
+        window.history.back();
+      })
+    }
+
+    function errorMsg(msg) {
+      Toast.fire({
+        icon: 'error',
+        title: msg
+      }).then(function () {
+        window.location.reload();
+      })
+    }
+
+  </script>
 </head>
 <body>
 

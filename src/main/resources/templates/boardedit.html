@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="/css/boardedit.css">
     <title>보드 수정 페이지</title>
+    <link rel="shortcut icon" href="#">
     <style>
         .container {
             display: grid;
@@ -134,7 +135,7 @@
 
 
                 <label for="color-picker" style="">Color:</label>
-                <input type="color" value="#ff0000" id="color-picker"/><br>
+                <input type="color" th:value="${Board.getColor()}" id="color-picker"/><br>
                 select: <input type="text" th:value="${Board.getColor}" name="target" class="selected_color"><br><br>
 
                 <p value=""></p>
