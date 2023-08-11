@@ -127,14 +127,25 @@
         // 컬럼 삭제
         $(".delete-column-btn").click(function () {
             var columnId = $(this).attr("id").split("-")[2];
+
+            var confirmDelete = confirm("컬럼을 삭제하시겠습니까?");
+            if(confirmDelete) {
+                deleteColumn(columnId);
+            } // 컬럼 삭제 여부 확인
+
             console.log(columnId);
-            deleteColumn(columnId);
+
         });
     });
 
     // 컬럼 이름 수정
     function editColumn(columnId) {
         var newColumnName = prompt("Enter the new column name:");
+
+        if (newColumnName === null) {
+            return; // 사용자가 취소를 눌렀을 경우 함수 종료
+        }
+
         var requestData = JSON.stringify({
             name: newColumnName,
             boardId: boardId
@@ -161,6 +172,11 @@
     // 컬럼 생성
     function createColumn() {
         var ColumnName = prompt("Enter the new column name:");
+
+        if (ColumnName === null) {
+            return; // 사용자가 취소를 눌렀을 경우 함수 종료
+        }
+
         var requestData = JSON.stringify({
             name: ColumnName,
             boardId: boardId
