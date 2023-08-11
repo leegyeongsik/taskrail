@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="#">
     <title>카드 수정 페이지</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -14,6 +16,18 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/5547fa07a6.js" crossorigin="anonymous"></script>
     <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'center-center',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
         let jwtCookie_temp = getCookieValueByName('Authorization');
         let jwtCookie = removeBearerPrefix(jwtCookie_temp);
         function getCookieValueByName(name) {
@@ -159,15 +173,33 @@
             })
                 .then(function (response) {
                     if (response.ok) {
-                        console.log('카드가 성공적으로 수정되었습니다.');
-                        history.back();                    } else {
-                        console.log('카드 수정에 실패했습니다.');
+                        successMsg('카드 수정 성공');
+                        history.back();
+                    } else {
+                        errorMsg('카드 수정 실패 : 작성자가 아닙니다.');
+                        //console.log('카드 수정 실패 시 작성자가 아니여서일 확룍 다분')
+                        window.location.reload();
                     }
                     return response; // 이 부분을 추가합니다.
                 })
                 .catch(function (error) {
+                    errorMsg('카드 수정 실패');
                     console.log('카드 수정 중 오류가 발생했습니다.', error);
                 });
+        }
+
+        function successMsg(msg) {
+            Toast.fire({
+                icon: 'success',
+                title: msg
+            })
+        }
+
+        function errorMsg(msg){
+            Toast.fire({
+                icon: 'error',
+                title: msg
+            })
         }
 
     </script>
