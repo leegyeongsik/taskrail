@@ -17,10 +17,11 @@ public class CardViewController {
         return "card-create";
     }
 
-    @GetMapping("/cards/{cardId}")
-    public String getCardOne(@PathVariable String cardId, Model model){
+    @GetMapping("/boards/{boardId}/cards/{cardId}")
+    public String getCardOne(@PathVariable String boardId, @PathVariable String cardId, Model model){
 
         model.addAttribute("cardId", cardId);
+        model.addAttribute("boardId", boardId);
         return "card-detail";
     }
 
