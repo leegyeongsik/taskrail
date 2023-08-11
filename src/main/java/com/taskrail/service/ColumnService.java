@@ -9,6 +9,7 @@ import com.taskrail.entity.User;
 import com.taskrail.repository.BoardRepository;
 import com.taskrail.repository.ColumnRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,4 +163,10 @@ public class ColumnService {
     }
 
 
+   // @Transactional
+    public void dragColumn(Long columnId, int newPosition) {
+        Columns column = findColumn(columnId);
+        column.setPos(newPosition);
+        columnRepository.save(column);
+    }
 }
