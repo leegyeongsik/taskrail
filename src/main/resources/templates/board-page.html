@@ -105,6 +105,18 @@
 <button id="addColumnBtn">+ Create Column</button>
 </body>
 <script th:inline="javascript">
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'center-center',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
     var boardId = [[${board.boardId}]];
 
     $(document).ready(function () {
@@ -127,14 +139,20 @@
         // 컬럼 삭제
         $(".delete-column-btn").click(function () {
             var columnId = $(this).attr("id").split("-")[2];
+            var confirmDelete = confirm("컬럼을 삭제하시겠습니까?");
+            if(confirmDelete) {
+                deleteColumn(columnId);
+            }
             console.log(columnId);
-            deleteColumn(columnId);
         });
     });
 
     // 컬럼 이름 수정
     function editColumn(columnId) {
         var newColumnName = prompt("Enter the new column name:");
+        if (newColumnName === null) {
+            return; // 사용자가 취소를 눌렀을 경우 함수 종료
+        }
         var requestData = JSON.stringify({
             name: newColumnName,
             boardId: boardId
@@ -149,11 +167,12 @@
             },
             data: requestData,
             success: function (data) {
-                alert("Column name updated successfully!");
+                // alert("Column name updated successfully!");
                 updateColumnNameInDOM(columnId, data.name);
+                successMsg("칼럼 수정 완료");
             },
             error: function () {
-                alert("Error updating column name");
+                errorMsg("칼럼 수정 실패");
             }
         });
     }
@@ -175,10 +194,10 @@
             },
             data: requestData,
             success: function (data) {
-                location.reload();
+                successMsg("칼럼 생성 완료");
             },
             error: function () {
-                alert("Error creating column");
+                errorMsg("칼럼 생성 실패");
             }
         });
     }
@@ -192,10 +211,10 @@
                 "Authorization": Cookies.get('Authorization')
             },
             success: function () {
-                location.reload();
+                successMsg("칼럼 삭제 완료");
             },
             error: function () {
-                alert("Error deleting column");
+                errorMsg("칼럼 삭제 실패");
             }
         });
     }
@@ -223,11 +242,10 @@
                 "Authorization": Cookies.get('Authorization')
             },
             success: function (data) {
-                alert(data); // 성공 메시지 표시
-                location.reload();
+                successMsg(data); // 성공 메시지 표시
             },
             error: function () {
-                alert("Error moving column");
+                errorMsg("더이상 우측으로 이동 불가합니다.");
             }
         });
     }
@@ -247,11 +265,10 @@
                 "Authorization": Cookies.get('Authorization')
             },
             success: function (data) {
-                alert(data); // 성공 메시지 표시
-                location.reload();
+                successMsg(data); // 성공 메시지 표시
             },
             error: function () {
-                alert("Error moving column");
+                errorMsg("더이상 좌측으로 이동 불가합니다.");
             }
         });
     }
@@ -282,12 +299,11 @@
                 "Authorization": Cookies.get('Authorization')
             },
             success: function (data) {
-                console.log(data.toString());
-                alert("이동 성공!"); // 성공 메시지 표시
+                successMsg("우측 컬럼으로 이동 성공");
                 location.reload();
             },
             error: function () {
-                alert("Error moving card");
+                errorMsg("우측으로 이동할 칼럼이 없습니다.");
             }
         });
     }
@@ -307,15 +323,30 @@
                 "Authorization": Cookies.get('Authorization')
             },
             success: function (data) {
-                alert("이동 성공!"); // 성공 메시지 표시
+                successMsg("좌측 컬럼으로 이동 성공"); // 성공 메시지 표시
                 location.reload();
             },
             error: function () {
-                alert("Error moving card");
+                errorMsg("좌측으로 이동할 칼럼이 없습니다.");
             }
         });
     }
 
+    function successMsg(msg) {
+        Toast.fire({
+            icon: 'success',
+            title: msg
+        }).then(function () {
+            window.location.reload();
+        })
+    }
+
+    function errorMsg(msg){
+        Toast.fire({
+            icon: 'error',
+            title: msg
+        })
+    }
 
 
 </script>
