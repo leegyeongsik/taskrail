@@ -171,7 +171,7 @@
             let url = '/api/cards/'+cardId+'/comments';
             let bodyContent = document.getElementById('comment-input').value;
             let formData = {
-                body : bodyContent
+                content : bodyContent
             }
 
             fetch(url, {
@@ -185,7 +185,7 @@
                 .then(response => response.json())
                 .then(data => {
                     alert(data.msg);
-                    //window.location.reload()
+                    window.location.reload()
                 })
                 .catch(error => {
                     console.error("댓글 작성 실패:", error);
