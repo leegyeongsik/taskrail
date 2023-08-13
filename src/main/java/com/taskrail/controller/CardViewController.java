@@ -25,9 +25,10 @@ public class CardViewController {
         return "card-detail";
     }
 
-    @GetMapping("/cards/{cardId}/update")
-    public String updateCard(@PathVariable String cardId, Model model){
+    @GetMapping("/boards/{boardId}/cards/{cardId}/update")
+    public String updateCard(@PathVariable String cardId,@PathVariable String boardId, Model model){
 
+        model.addAttribute("boardId", boardId);
         model.addAttribute("cardId", cardId);
         return "card-update";
     }

@@ -53,6 +53,7 @@
         }
 
         let cardId = [[${cardId}]];
+        let boardId = [[${boardId}]];
         window.onload = function() {
             getCardData();
         }
@@ -149,6 +150,97 @@
                     console.error(error);
                 });
         }
+        function requestDatas (selectedUserIds) {
+            console.log("호출됨");
+            var requestData = {
+                user_id: selectedUserIds
+            };
+
+            var url = '/api/cards/' + cardId + '/assign';
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+        function updateRoleUser() {
+            var popupWidth = 400;
+            var popupHeight = 300;
+            var screenWidth = window.screen.width;
+            var screenHeight = window.screen.height;
+            var popupLeft = (screenWidth - popupWidth) / 2;
+            var popupTop = (screenHeight - popupHeight) / 2;
+
+            let url = '/api/boards/'+boardId+'/cards/'+cardId+'/users';
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtCookie}`,
+                },
+            })
+                .then(response => {
+                    if (response.status === 400) {
+                        alert('요청이 실패했습니다.');
+                    }
+                    return response.json(); // JSON 형태의 응답 데이터 파싱
+                })
+                .then(data => {
+
+                    // 팝업 창 열기
+                    var popup = window.open("", "작업자 할당 하기", "width=" + popupWidth + ", height=" + popupHeight + ", left=" + popupLeft + ", top=" + popupTop);
+
+                    // 팝업 내용 추가
+                    popup.document.write("<html><body>");
+                    popup.document.write("<h1>작업자 할당 하기</h1>");
+                    popup.document.write("<form id='dataRequestForm'>");
+                    popup.document.write("<label>인원 : </label><br>");
+
+                    for (let i = 0; i < data.length; i++) {
+                        let username = data[i].name;
+                        let userId= data[i].userId;
+
+                        popup.document.write(`<input type='checkbox' name='items' value='${userId}'>${username}<br>`);
+
+                    }
+                    popup.document.write("<button type='button' onclick='assignUpdateUsers()'>할당하기</button>");
+
+                    let selectedUserIds = [];
+
+                    popup.assignUpdateUsers = function () {
+                        var checkboxes = popup.document.querySelectorAll("input[name='items']:checked");
+
+                        checkboxes.forEach(checkbox => {
+                            var user_id = checkbox.value;
+                            selectedUserIds.push(user_id);
+                        });
+
+                        if (selectedUserIds.length > 0) {
+                            // 선택된 작업자 데이터를 부모 창의 requestData 함수로 전달
+
+                            requestDatas(selectedUserIds);
+                            popup.close(); // 팝업 창 닫기
+                        } else {
+                            alert("작업자를 선택해주세요.");
+                        }
+                    };
+
+
+                    popup.document.write("</form>");
+                    popup.document.write("</body></html>");
+
+                })
+                .catch(error => {
+                    // 오류 처리 로직을 작성합니다.
+                    console.error(error);
+                });
+        }
+
 
         function updateCard(cardId){
             let title = document.getElementById('card_title').value;

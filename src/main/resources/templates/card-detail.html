@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="btn-group mt-4 d-flex justify-content-around">
                                     <button class="btn btn-dark me-5" onclick="addUser()">작업인원추가</button>
-                                    <button class="btn btn-dark me-5" onclick="updateCardPage(cardId)">카드수정</button>
+                                    <button class="btn btn-dark me-5" onclick="updateCardPage(boardId,cardId)">카드수정</button>
                                     <button class="btn btn-dark me-5" onclick="deleteCard(cardId)">카드삭제</button>
                                     <a class="btn btn-dark" href="javascript:window.history.back();">뒤로가기</a>
                                 </div>
@@ -381,8 +381,8 @@
       });
     }
 
-    function updateCardPage(cardId) {
-      window.location.href = '/view/cards/' + cardId + '/update';
+    function updateCardPage(boardId,cardId) {
+      window.location.href = '/view/boards/'+boardId+'/cards/' + cardId + '/update';
     }
 
     function deleteCard(cardId) {

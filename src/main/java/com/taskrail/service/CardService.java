@@ -134,8 +134,6 @@ public class CardService {
 
         card.updateNext(nextColumn);
         log.info("update card Column: " + card.getColumn().getName());
-
-
     }
 
     @Transactional
@@ -214,11 +212,6 @@ public class CardService {
             CardRole cardRole = new CardRole(card,addUser);
             cardRoleRepository.save(cardRole);
         }
-
-
-
-
-
     }
     public List<UserResponseDto> getAddRoleUser(Long boardId, Long cardId) {
         Card card = cardRepository.findById(cardId).orElseThrow(
@@ -234,5 +227,42 @@ public class CardService {
         }
 
         return userResponseDtoList;
+    }
+
+    public void cardAssignUpdateUser(Long cardId, CardAssignUserRequestDto requestDto, User user) {
+        Card card = cardRepository.findById(cardId).orElseThrow(
+                () -> new IllegalArgumentException("카드가 없습니다.")
+        );
+
+        if(!card.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("작성한 유저가 아닙니다.");
+        }
+
+        //추가할 작업자 명단
+        List<Long> userIdList = requestDto.getUser_id();
+
+        //카드 작성자 찾기
+        CardRole hostCardRole = cardRoleRepository.findByUser_Id(card.getUser().getId()).orElseThrow(
+                () -> new IllegalArgumentException("카드 작성자가 없습니다.")
+        );
+
+        //작업명단 초기화
+        cardRoleRepository.deleteAll();
+
+        //카드 작성자 작업명단 추가
+        cardRoleRepository.save(hostCardRole);
+
+
+        //추가할 유저 리스트
+        for (Long userId : userIdList) {
+
+            //추가할 유저 정보
+            User addUser = userRepository.findById(userId).orElseThrow(
+                    () -> new NullPointerException("유저가 없습니다.")
+            );
+
+            CardRole cardRole = new CardRole(card,addUser);
+            cardRoleRepository.save(cardRole);
+        }
     }
 }
