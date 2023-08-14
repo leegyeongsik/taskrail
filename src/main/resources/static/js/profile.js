@@ -271,7 +271,7 @@ function removeUser() {
       title: '회원을 탈퇴하였습니다.'
     }).then(function () {
       Cookies.remove('Authorization', {path: '/'});
-      window.location.href="/view/main";
+      window.location.href="/view/login";
     })
   })
   .fail(function (jqXHR, textStatus, error) {

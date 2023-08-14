@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserRequestDto requestDto, User user) {
         User updateUser = userRepository.findUserById(user.getId());
 
-        if(!updateUser.getGoogleId().isEmpty()){
+        if(updateUser.getGoogleId() != null){
             throw new IllegalArgumentException("구글로 로그인한 사용자는 수정이 불가합니다.");
         }
         if(updateUser.getKakaoId() != null){

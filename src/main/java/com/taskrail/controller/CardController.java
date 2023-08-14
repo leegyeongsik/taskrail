@@ -79,13 +79,23 @@ public class CardController {
     }
 
     //9. 사용자 할당인원 추가
-    @PostMapping("/cards/{cardId}") // 유저 초대
+    @PostMapping("/cards/{cardId}")
     public ResponseEntity<ApiResponseDto> cardAssignUser(@PathVariable Long cardId ,
                              @RequestBody CardAssignUserRequestDto requestDto,
                              @AuthenticationPrincipal UserDetailsImpl userDetails){
         System.out.println("할당인원 추가-------------------------------------------------------------");
         cardService.cardAssignUser(cardId,requestDto,userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto("인원 추가 완료", HttpStatus.OK.value()));
+    }
+
+    //9. 사용자 할당인원 변경
+    @PutMapping("/cards/{cardId}/assign")
+    public ResponseEntity<ApiResponseDto> cardAssignUpdateUser(@PathVariable Long cardId ,
+                                                         @RequestBody CardAssignUserRequestDto requestDto,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
+        System.out.println("할당인원 추가-------------------------------------------------------------");
+        cardService.cardAssignUpdateUser(cardId,requestDto,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponseDto("인원 변경 완료", HttpStatus.OK.value()));
     }
 
     //10. 사용자 할당인원 조회
