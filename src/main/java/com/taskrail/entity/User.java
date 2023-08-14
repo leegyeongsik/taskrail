@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // lombok
 @Entity
 @Getter
@@ -35,6 +38,8 @@ public class User {
 
     private String googleId;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Board> boardList  = new ArrayList<>();
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
