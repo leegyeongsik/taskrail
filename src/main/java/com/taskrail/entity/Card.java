@@ -1,11 +1,16 @@
 package com.taskrail.entity;
 
 import com.taskrail.dto.CardRequestDto;
+import com.taskrail.dto.CommentResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "card")
@@ -39,9 +44,13 @@ public class Card extends Timestamped {
     @JoinColumn(name ="user_id")
     private User user;
 
-//    //댓글 리스트
-//    @OneToMany(mappedBy = "card")
-//    Set<CommentResponseDto> commentList = new LinkedHashSet<>();
+    //댓글 리스트
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    List<Comment> commentList = new ArrayList<>();
+
+    //유저 할당 리스트
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    List<CardRole> cardRoleList = new ArrayList<>();
 
     public Card(CardRequestDto requestDto, Columns column, Long orders, User user){
         this.title = requestDto.getTitle();
@@ -51,7 +60,6 @@ public class Card extends Timestamped {
         this.column = column;
         this.orders = orders;
         this.user = user;
-
     }
 
     public void update(CardRequestDto requestDto) {

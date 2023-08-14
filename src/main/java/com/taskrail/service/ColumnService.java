@@ -9,9 +9,11 @@ import com.taskrail.entity.User;
 import com.taskrail.repository.BoardRepository;
 import com.taskrail.repository.ColumnRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,23 +26,22 @@ public class ColumnService {
     private final BoardService boardService;
 
 
-    // 모든 컬럼 조회
-    public List<ColumnResponseDto> getAllColumns() {
-        List<Columns> columns = columnRepository.findAll();
-        // Columns 엔티티를 ColumnResponseDto로 변환하여 반환
-        return columns.stream()
+    // 보드 내 모든 컬럼 조회
+    public List<ColumnResponseDto> getBoardColumns(Board board) {
+        List<ColumnResponseDto> columns = board.getColumns().stream()
                 .map(ColumnResponseDto::new)
+                .sorted(Comparator.comparing(ColumnResponseDto::getPos)) // 컬럼 위치 순 정렬
                 .collect(Collectors.toList());
+        return columns;
     }
 
     // 컬럼 생성
-    //@Transactional
     public ColumnResponseDto createColumn(User user, ColumnRequestDto columnRequestDto) {
 
         Board board = findBoard(columnRequestDto.getBoardId());
 
         //  보드에 초대된 유저인지 확인
-        if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
+        if (!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
@@ -58,20 +59,20 @@ public class ColumnService {
 
     // 컬럼 이름 변경
     @Transactional
-    public void updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
+    public ColumnResponseDto updateColumnTitle(User user, Long id, ColumnRequestDto columnRequestDto) {
         Board board = findBoard(columnRequestDto.getBoardId());
 
-        if(!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
+        if (!isUserInvited(board.getBoardId(), user.getId()) && !user.equals(board.getUser())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
-
         Columns column = findColumn(id);
         column.setName(columnRequestDto.getName());
+
+        return new ColumnResponseDto(column);
     }
 
     // 컬럼 삭제
-    //@Transactional
     public void deleteColumn(User user, Long id) {
         Columns column = findColumn(id);
         Long boardId = column.getBoard().getBoardId();
@@ -162,4 +163,10 @@ public class ColumnService {
     }
 
 
+   // @Transactional
+    public void dragColumn(Long columnId, int newPosition) {
+        Columns column = findColumn(columnId);
+        column.setPos(newPosition);
+        columnRepository.save(column);
+    }
 }

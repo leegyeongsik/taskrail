@@ -10,13 +10,13 @@
           integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
           crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-  <link rel="stylesheet" href="/css/login-style.css">
+  <link rel="stylesheet" href="/css/login-page.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-  <title>로그인 / 회원가입 페이지</title>
+  <title>Task Rail</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
   <!-- Sign Up -->
   <div class="container__form container--signup">
     <div class="form" id="form1">
-      <h2 class="form__title">SIGN UP</h2>
+      <h2 class="form__title">Task Rail</h2>
       <input type="text" placeholder="아이디" name="username" id="username" class="input"/>
       <input type="password" placeholder="비밀번호" name="password" id="password" class="input"/>
       <a href="" id="showSignupPwBtn" style="margin-left: -70%; font-size:14px;">Show Password</a>
@@ -37,12 +37,21 @@
   <!-- Log In -->
   <div class="container__form container--login">
     <div class="form" id="form2">
-      <h2 class="form__title">LOGIN</h2>
+      <h2 class="form__title">Task Rail</h2>
       <input type="text" placeholder="아이디" name="loginUsername" id="loginUsername" class="input"/>
       <input type="password" placeholder="비밀번호" name="loginPassword" id="loginPassword"
              class="input"/>
       <a href="" id="showLoginPwBtn" style="margin-left: -70%; font-size:14px;">Show Password</a>
-      <button class="btn" onclick="onLogin()">로그인하기</button>
+      <button class="btn" onclick="onLogin()">로그인</button>
+<!--      port number 8080이신 분은 application.properties에서 변경 부탁드립니다.-->
+      <button id="login-kakao-btn"
+              onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=02cb829710fd580f5d057019ea05a288&redirect_uri=http://localhost:8082/api/users/kakao/callback&response_type=code'">
+        KakaoTALK
+      </button>
+      <button id="login-google-btn"
+              onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?client_id=678064930886-r2oo68m8nm0oe7d81ng6ph0obst30hhf.apps.googleusercontent.com&redirect_uri=http://localhost:8082/api/users/google/callback&response_type=code&scope=email'">
+        Google
+      </button>
     </div>
   </div>
 
@@ -50,10 +59,10 @@
   <div class="container__overlay">
     <div class="overlay">
       <div class="overlay__panel overlay--left">
-        <button class="btn" id="logIn">LogIn</button>
+        <button class="btn" id="logIn" style="WIDTH: 67%;">LogIn</button>
       </div>
       <div class="overlay__panel overlay--right">
-        <button class="btn" id="signUp">Sign Up</button>
+        <button class="btn" id="signUp" style="WIDTH: 67%;">Sign Up</button>
       </div>
     </div>
   </div>

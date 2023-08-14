@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <link rel="stylesheet" href="/css/boardedit.css">
+    <title>보드 수정 페이지</title>
+    <link rel="shortcut icon" href="#">
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 300px 300px 300px 300px;
+            gap: 40px;
+            width: 1100px;
+            height: 800px;
+            left: 785px;
+            top: 102px;
+            position: absolute;
+        }
+
+        .container .item {
+            background-color: #fff;
+            border: 1px solid #fff;
+            aspect-ratio: 1;
+            border-radius: 10px;
+
+        }
+
+        .container .item .item_text {
+            margin-left: 20px;
+            display: inline;
+
+        }
+
+        .container .item .item_descripte {
+            margin-left: 23px;
+        }
+
+        .CreateNewBoard {
+            width: 300px;
+            height: 300px;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+            text-align: center;
+            color: black;
+            font-size: 24px;
+            font-family: Poppins;
+            font-weight: 400;
+            word-wrap: break-word;
+        }
+
+        .container .item_edit {
+            margin-left: 23px;
+            margin-top: 130px;
+            font-size: 18px;
+
+        }
+
+        .container .item_delete {
+            margin-left: 265px;
+            display: inline;
+
+        }
+
+        .container .item_move {
+            margin-left: 265px;
+        }
+        .container .item_descripte .btns{
+            border: 0;
+            outline: 0;
+        }
+        .btnss{
+            border: 0;
+            outline: 0;
+
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="HomePage" style="width: 1850px; height: 1200px; position: relative; background: white; border: 0.50px">
+
+
+    <div class="Group61">
+        <!-- top  -->
+        <div class="top" style="width: 1850px; height: 158px; left: 0px; top: 0px; position: absolute">
+            <div class="topline"
+                 style="width: 1px; height: 32px; left: 126px; top: 13px; position: absolute; opacity: 0.10; background: black; border-radius: 0.50px"></div>
+            <div class="topline2"
+                 style="width: 1px; height: 32px; left: 251px; top: 13px; position: absolute; opacity: 0.10; background: black; border-radius: 0.50px"></div>
+            <div class="top" style="width: 222px; height: 32px; left: 29px; top: 13px; position: absolute">
+                <div class="graph"
+                     style="width: 24px; height: 24px; left: 141px; top: 28px; position: absolute; transform: rotate(-180deg); transform-origin: 0 0">
+                    <div class="Board"
+                         style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute;  border-radius: 3px"></div>
+                    <div class="RightList"
+                         style="width: 7.32px; height: 10.50px;  top: 4px; position: absolute;   background: black; border-radius: 1.44px"></div>
+                    <div class="LeftList"
+                         style="width: 7.32px; height: 16.50px; left: 8px;  top: 4px;position: absolute;  opacity: 0.20; background: black; border-radius: 1.44px"></div>
+                </div>
+                <!-- top text -->
+                <div class="Boards"
+                     style="left: 146px; top: 4px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+                    Boards
+                </div>
+                <div class="TaskRailtext"
+                     style="left: 0px; top: 4px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+                    TaskRail
+                </div>
+            </div>
+        </div>
+        <div class="Line"
+             style="width: 1850px; height: 3px; left: 0px; top: 79px; position: absolute; opacity: 0.10; background: black"></div>
+        <div class="Boards"
+             style="left: 1773px; top: 32px; position: absolute; color: black; font-size: 16px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
+            MyPage
+        </div>
+        <div class="TaskRailtitle"
+             style="width: 282px; height: 158px; left: 811px; top: 0px; position: absolute; text-align: center; color: black; font-size: 48px; font-family: Imprima; font-weight: 400; word-wrap: break-word">
+            Task Rail
+        </div>
+    </div>
+    <!-- top  -->
+
+    <div class="container">
+        <div class="item" style="border: 1px solid #000 ; background-color: #fff; border:2px dashed; padding:10px;">
+            <div class="CreateNewBoard">
+                <br>
+                title: <input type="text" th:value="${Board.getTitle}" id="title_text"><br>
+                des: <input type="text"  th:value="${Board.getDescription}"id="des_text"><br><br>
+
+
+                <label for="color-picker" style="">Color:</label>
+                <input type="color" th:value="${Board.getColor()}" id="color-picker"/><br>
+                select: <input type="text" th:value="${Board.getColor}" name="target" class="selected_color"><br><br>
+
+                <p value=""></p>
+                <button class="btns">edit</button>
+                <button class="btnss">cancel</button>
+                <p id="targetIdParagraph" style="display: none;">targetId: <span th:text="${tagId}"></span></p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    var boardNo = document.getElementById('targetIdParagraph').querySelector('span').innerText;
+
+    let colorPicker;
+    const defaultColor = "#0000ff";
+    window.addEventListener("load", startup, false);
+    function startup() {
+        colorPicker = document.querySelector("#color-picker");
+        colorPicker.value = defaultColor;
+        colorPicker.addEventListener("input", updateFirst, false);
+        colorPicker.select();
+    }
+
+    function updateFirst(event) {
+        const p = document.querySelector("p");
+        if (p) {
+            const temp_color = event.target.value;
+            const RGB= temp_color
+            // const hex = getHEX(RGB);
+            // console.log(RGB)
+            // console.log(event.target.value)
+            $('input[name=target]').attr('value',RGB)
+        }
+    }
+
+
+    const getHEX = (RGB) => {
+        // const colorss = RGB.slice(4,-1);
+        // console.log(colorss)
+
+        const colors = RGB.split(",");
+        return RGB && colors
+            .map(color => Number(color)
+                .toString(16)
+                .padStart(2, '0'))
+            .join('');
+
+    }
+    $(document).on('click',"button[class='btns']" , function (e) { // 보드 수정
+        e.preventDefault();
+        var titles = document.getElementById("title_text").value;
+        var des = document.getElementById("des_text").value;
+        var colors = document.querySelector(".selected_color").value
+
+        $.ajax({
+            url: `/api/boards/${boardNo}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({title: titles, description: des , color : colors}),
+
+            headers: {
+                'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+            },
+            success: function (response) {
+                if (response) {
+                    window.location.href = '/view/main';
+                }
+            },
+            error: function () {
+                console.log("실패")
+            }
+        })
+    })
+
+    $(document).on('click',"button[class='btnss']" , function (e) { // 취소 main 페이지로 이동
+        window.location.href = '/view/main';
+    })
+</script>
+</body>
+
+</html>

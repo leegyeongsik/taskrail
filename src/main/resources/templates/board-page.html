@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/2675/2675848.png"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <link rel="stylesheet" href="/css/board-page.css">
+    <title>Board</title>
+</head>
+<body>
+<h1 style="
+    text-align: center;
+    font-size: 3em;
+" th:text="${board.title}">
+</h1>
+<h2 style="
+    margin-left: 1.2%;
+    padding: 1.1em 1.1em 0em;
+">보드 권한 설정 검색</h2>
+<h1>
+    <div class = "search-bar" >
+        <input type="search" value="" name="search" id="btn_toggless" pattern=".*\S.*" required>
+        <button class="search-btn" value="" type="submit" id="btn_toggle">
+            <span>Search</span>
+        </button>
+    </div>
+</h1>
+
+<h1>
+    <div id="pop"
+         style="display:none; overflow: auto;">
+        <div style="height:370px; left: 150px">
+            <div class="listBox" style="font-size: 20px; color:#171717; padding: 3%;">
+                selected: <input type="text" id="title_text" style="font-size: 15px; color:#171717;"><br>
+            </div>
+        </div>
+    </div>
+</h1>
+
+<div class="column-container" data-board-id="${board.boardId}">
+    <div th:each="column : ${columns}" class="column" th:id="${'column-' + column.id}">
+        <div class="column-header">
+            <h3 th:id="${'column-name-' + column.id}" th:text="${column.name}"></h3>
+            <button class="edit-column-btn" th:id="${column.id}">Edit</button>
+            <button class="delete-column-btn" th:id="${'delete-column-' + column.id}">X</button>
+            <div class="move-button-container">
+                <button class="move-column-left-btn" th:id="${'move-column-left-' + column.id}">
+                    ◀
+                </button>
+                <button class="move-column-right-btn" th:id="${'move-column-right-' + column.id}">
+                    ▶
+                </button>
+            </div>
+        </div>
+        <div th:each="card : ${column.cards}" class="card" th:id="${card.id}"
+             th:style="'background-color: ' + ${card.color}">
+            <div class="cards" th:id="${card.id}">
+                <p class="card-text" th:text="${card.title}"></p>
+                <p class="card-text" th:text="${card.content}"></p>
+            </div>
+            <div class="move-button-container">
+                <button class="move-card-left-btn" th:id="${column.id + '-move-card-left-' + card.id}">
+                    ◀
+                </button>
+                <button class="move-card-right-btn" th:id="${column.id + '-move-card-right-' + card.id}">
+                    ▶
+                </button>
+            </div>
+        </div>
+        <button class="add-card-button" th:id="${column.id} + '-add-card'">+ Add Card</button>
+    </div>
+
+</div>
+<button id="addColumnBtn">+ Create Column</button>
+</body>
+<script th:inline="javascript">
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'center-center',
+        showConfirmButton: false,
+        timer: 600,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    var boardId = [[${board.boardId}]];
+
+    $(document).ready(function () {
+        // var boardContainer = $("#boardContainer");
+        // var boardId = boardContainer.data("board-id");
+
+        // 컬럼 이름 수정
+        $(".edit-column-btn").click(function () {
+            var columnId = $(this).attr("id");
+            console.log(columnId);
+            console.log(boardId);
+            editColumn(columnId);
+        });
+
+        // 컬럼 추가
+        $("#addColumnBtn").click(function () {
+            createColumn();
+        });
+
+        // 컬럼 삭제
+        $(".delete-column-btn").click(function () {
+            var columnId = $(this).attr("id").split("-")[2];
+            var confirmDelete = confirm("컬럼을 삭제하시겠습니까?");
+            if(confirmDelete) {
+                deleteColumn(columnId);
+            } // 컬럼 삭제 여부 확인
+
+            console.log(columnId);
+
+        });
+        $('#btn_toggle').click(function() {
+            $('#pop').show();
+        });
+        // 카드 추가
+        $(".add-card-button").click(function () {
+            const columnId = $(this).attr("id").split("-")[0];
+            window.location.href = `/view/${columnId}/cards`
+        });
+
+        // 컬럼 이름 수정
+        function editColumn(columnId) {
+            var newColumnName = prompt("Enter the new column name:");
+            if (newColumnName === null) {
+                return; // 사용자가 취소를 눌렀을 경우 함수 종료
+            }
+            var requestData = JSON.stringify({
+                name: newColumnName,
+                boardId: boardId
+            });
+
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}`,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": Cookies.get('Authorization')
+                },
+                data: requestData,
+                success: function (data) {
+                    // alert("Column name updated successfully!");
+                    updateColumnNameInDOM(columnId, data.name);
+                    successMsg("칼럼 수정 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 수정 실패");
+                }
+            });
+
+
+        }
+
+        // 컬럼 생성
+        function createColumn() {
+            var ColumnName = prompt("Enter the new column name:");
+
+            if (ColumnName === null) {
+                return; // 사용자가 취소를 눌렀을 경우 함수 종료
+            }
+
+            var requestData = JSON.stringify({
+                name: ColumnName,
+                boardId: boardId
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/api/columns",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": Cookies.get('Authorization')
+                },
+                data: requestData,
+                success: function (data) {
+                    successMsg("칼럼 생성 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 생성 실패");
+                }
+            });
+        }
+
+        // 컬럼 삭제
+        function deleteColumn(columnId) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/columns/${columnId}`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function () {
+                    successMsg("칼럼 삭제 완료");
+                },
+                error: function () {
+                    errorMsg("칼럼 삭제 실패");
+                }
+            });
+        }
+
+        // 컬럼 수정한 이름 업데이트
+        function updateColumnNameInDOM(columnId, newName) {
+            const columnNameElement = document.querySelector(`#column-name-${columnId}`);
+            if (columnNameElement) {
+                columnNameElement.textContent = newName;
+            }
+        }
+
+        // 컬럼 오른쪽 이동 버튼 클릭 이벤트 처리
+        $(".move-column-right-btn").click(function () {
+            const columnId = $(this).attr("id").split("-")[3];
+            moveColumnRight(columnId);
+        });
+
+        // 컬럼 오른쪽으로 이동
+        function moveColumnRight(columnId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}/right`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg(data); // 성공 메시지 표시
+                },
+                error: function () {
+                    errorMsg("더이상 우측으로 이동 불가합니다.");
+                }
+            });
+        }
+
+        // 컬럼 왼쪽으로 이동 버튼
+        $(".move-column-left-btn").click(function () {
+            var columnId = $(this).attr("id").split("-")[3];
+            moveColumnLeft(columnId);
+        });
+
+        // 컬럼 왼쪽으로 이동
+        function moveColumnLeft(columnId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/columns/${columnId}/left`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg(data); // 성공 메시지 표시
+                },
+                error: function () {
+                    errorMsg("더이상 좌측으로 이동 불가합니다.");
+                }
+            });
+        }
+
+
+
+
+
+        // 카드 클릭시 상세 페이지 로드
+        $(".cards").click(function () {
+            const cardId = $(this).attr("id");
+
+            window.location.href = `/view/boards/${boardId}/cards/${cardId}`
+        });
+
+
+        // 카드 오른쪽 이동 버튼 클릭 이벤트 처리
+        $(".move-card-right-btn").click(function () {
+            const cardId = $(this).attr("id").split("-")[4];
+            moveCardRight(cardId);
+        });
+
+        // 카드 오른쪽으로 이동
+        function moveCardRight(cardId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/cards/${cardId}/next`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg("우측 컬럼으로 이동 성공");
+                    location.reload();
+                },
+                error: function () {
+                    errorMsg("우측으로 이동할 칼럼이 없습니다.");
+                }
+            });
+        }
+
+        // 카드 왼쪽으로 이동 버튼
+        $(".move-card-left-btn").click(function () {
+            const cardId = $(this).attr("id").split("-")[4];
+            moveCardLeft(cardId);
+        });
+
+        // 카드 왼쪽으로 이동
+        function moveCardLeft(cardId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/cards/${cardId}/prev`,
+                headers: {
+                    "Authorization": Cookies.get('Authorization')
+                },
+                success: function (data) {
+                    successMsg("좌측 컬럼으로 이동 성공"); // 성공 메시지 표시
+                    location.reload();
+                },
+                error: function () {
+                    errorMsg("좌측으로 이동할 칼럼이 없습니다.");
+                }
+            });
+        }
+        var list
+        var temp_selected1
+        var temp_selected2
+
+        $(document).on('click',"button[id='btn_toggle']" , function (e) { // 유저 검색
+            e.preventDefault();
+            list = [];
+            temp_selected1 = [];
+            temp_selected2 = [];
+
+            var text = document.getElementById("btn_toggless").value;
+            $.ajax({
+                url: `/api/boards/${boardId}/search?name=${text}`,
+                type: 'GET',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+                },
+                success: function (response) {
+                    if (response) {
+                        $('#pop').empty();
+                        var boardaaa =
+                            `<div style = "height:370px; left: 150px" >
+                            <div class = "listBox" style = "font-size: 20px; color:#171717; padding: 3%;" >
+                            selected:<input type="text" id="title_text"  value=""style="font-size: 15px; color:#171717;"><br>
+                            </div>
+                        </div>`
+                        $('#pop').append(boardaaa);
+
+                        for (let i = 0; i < response.length; i++) {
+                            if (response[i].isin == true){
+                                var isin = "Member";
+                                var boards=`
+                                    <div class="listInner">
+                                        <span class="country" style="font-size: 20px">${response[i].name}</span>
+                                        <span class="exist" style="font-size: 20px">| ${isin}</span>
+                                    </div>`
+                                $('.listBox').append(boards);
+
+                            } else {
+                                var isin = "Not Member";
+                                var boards=`
+                                    <div class="listInner">
+                                        <span class="country" style="font-size: 20px">${response[i].name}</span>
+                                        <span class="exist" style="font-size: 20px">| ${isin}</span>
+                                        <span class="add" style="font-size: 20px">
+                                        <button class="btns" id =${response[i].userId} value=${response[i].name} style="border: 1px solid #FFFFFF; background-color:#FFFFFF;"> 선택</button></span>
+                                    </div>`
+                                $('.listBox').append(boards);
+                            }
+                        }
+                    }
+                    var boardss=`
+                    <div id="submit">권한설정</div>
+                    <div id="close">닫기</div>`
+                    $('.listBox').append(boardss);
+                    $('#close').click(function() {
+                        $('#pop').hide();
+                    });
+                }
+            })
+        })
+
+        $(document).on('click',"button[class='btns']" , function (e) { // 유저 add
+            e.preventDefault();
+            var tagIds = e.target.id
+            var tagId = e.target.value
+            e.target.display = "none";
+
+            list.push(tagIds)
+            if (temp_selected1 != null){
+                temp_selected2 = tagId
+                temp_selected1 = temp_selected1 + ' ' + temp_selected2;
+            } else {
+                temp_selected1 = tagId
+            }
+
+            $('input[id=title_text]').attr('value',temp_selected1)
+        })
+
+        $(document).on('click',"div[id='submit']" , function (e) { // 유처 초대
+            e.preventDefault();
+            $.ajax({
+                url: `/api/boards/${boardId}`,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': Cookies.get('Authorization') // 클라이언트 쿠키의 값을 전달
+                },
+                data: JSON.stringify({user_id: list}),
+
+                success: function (response) {
+                    if (response) {
+                        window.location.reload();
+                    }
+                }
+            })
+        })
+
+        function successMsg(msg) {
+            Toast.fire({
+                icon: 'success',
+                title: msg
+            }).then(function () {
+                window.location.reload();
+            })
+        }
+
+        function errorMsg(msg){
+            Toast.fire({
+                icon: 'error',
+                title: msg
+            })
+        }})
+
+</script>
+
+</html>
